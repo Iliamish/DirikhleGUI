@@ -243,24 +243,24 @@ namespace DirikhleGUI {
 		double a2, k2, h2; // ненулевые элементы матрицы (-A)
 
 		func my_func;
-		const int n = 10, m = 10; //размерность сетки
+		const int n = 4, m = 4; //размерность сетки
 		writeHeader(n, m);
-
-		std::vector<std::vector<double>> v(n + 1); // искомый вектор v
+		std::vector<std::vector<double> >  v(n+1, std::vector<double>(m+1));
+		//std::vector<std::vector<double>> v(n + 1); // искомый вектор v
 		std::vector<std::vector<double>> v_2(2 * n + 1); // искомый вектор v с половинным шагом
 		std::vector<double> r((n - 1) * (m - 1)); // невязка
 		double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
 		double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
 		h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
 		k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
-		a2 = -2 * (h2 + k2);
+		a2 = 2 * (h2 + k2);
 		bool flag = false;
 
 		int i, j; //индексы
 		double v_old; // старое значение преобразуемой компоненты вектора v
 		double v_new; // новое значение преобразуемой компоненты вектора v
 
-		solve(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		//solve(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 		S_2 = S;
 		S = 0;
 		eps_max_2 = eps_max;
@@ -268,8 +268,7 @@ namespace DirikhleGUI {
 		eps_cur = 0;
 		error_max = 0;
 		solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-
-
+		
 		for (j = 1; j < m; j++)
 			for (i = 1; i < n; i++) {
 				double k_1 = h2 * (v[i + 1][j] * ((i + 1 == n) ? 0 : 1)

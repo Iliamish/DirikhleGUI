@@ -88,6 +88,55 @@ void writeHeader(int n, int m) {
     outfile << "\nu = exp(sin(pi * x * y) * sin(pi * x * y)). Сетка " << n << "x" << m << ". Границы: a=0, b=2, c=0, d=1\n" << std::endl;
 }
 
+template <typename Function>
+double calculateAlpha(double h2,double k2,double a, std::vector<std::vector<double>>& v, std::vector<std::vector<double>>& hs, Function func,const int n, const int m,double h,double k,double ag,double cg) {
+
+    double top = 0;
+    double value=0;
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++) {
+            value= (a * v[i][j] + h2*v[i-1][j]+h2*v[i+1][j]+k2*v[i][j-1]+k2*v[i][j+1] - func(ag+i*h,cg+j*k))*hs[i][j];
+            top += value;
+        }
+    }
+
+    double bottom = 0;
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++) {
+            value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
+            bottom += value;
+        }
+    }
+
+    return (-top / bottom);
+}
+
+
+template <typename Function>
+double calculateBeta(double h2, double k2, double a, std::vector<std::vector<double>>& r, std::vector<std::vector<double>>& hs, Function func, const int n, const int m, double h, double k, double ag, double cg) {
+
+    double top = 0;
+    double value;
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++) {
+            value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1] ) * r[i][j];
+            top += value;
+        }
+    }
+
+    double bottom = 0;
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++) {
+            value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
+            bottom += value;
+        }
+    }
+
+    return top / bottom;
+}
+
+
+
 double equalsZero(double num) {
     return (num < eps&& num > -eps) ? 0.0 : num;
 }
@@ -102,6 +151,83 @@ double w_optimal(double a, double b, double c, double d, double h1, double h2) {
 }
 
 template <typename Function>
+void solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+    int i, j; //индексы
+    double a2, k2, h2;
+
+    h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
+    k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
+    a2 = -2 * (h2 + k2);
+
+    std::vector<std::vector<double> >  h(n+1, std::vector<double>(m+1));
+
+    auto m1 = [](double x, double y) {
+        return equalsZero(sin(M_PI * y) * sin(M_PI * y));
+    };
+    auto m2 = [](double x, double y) {
+        return equalsZero(sin(M_PI * 2 * y) * sin(M_PI * 2 * y));
+    };
+    auto m3 = [](double x, double y) {
+        return equalsZero(sin(M_PI * x) * sin(M_PI * x));
+    };
+    auto m4 = [](double x, double y) {
+        return equalsZero(sin(M_PI * 2 * x) * sin(M_PI * 2 * x));
+    };
+
+    for (j = 0; j < m + 1; j++) {
+        v[0][j] = m1(a, c + (d - c) / m * j);
+    }
+    for (j = 0; j < m + 1; j++) {
+        v[n][j] = m2(b, c + (d - c) / m * j);
+    }
+    for (i = 0; i < n + 1; i++) {
+        v[i][0] = m3(a + i * (b - a) / n, c);
+    }
+    for (i = 0; i < n + 1; i++) {
+        v[i][m] = m4(a + i * (b - a) / n, d);
+    }
+
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++) {
+            h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b-a)/n, c + j * (d-c)/m));
+        }
+    }
+
+    double alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n,double (d - c) / m, a, c);
+    for (int i = 0; i < n + 1; i++) {
+        for (int j = 0; j < m + 1; j++) {
+            v[i][j] += alpha * h[i][j];
+        }
+    }
+    double beta = 0;
+    for (int k = 1; k < 10; k++) {
+        std::vector<std::vector<double> >  r(n+1, std::vector<double>(m+1));
+        for (int i = 1; i < n ; i++) {
+            for (int j = 1; j < m ; j++) {
+              r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * double(b-a)/n, c + j *double (d-c)/m));
+            }
+        }
+        beta = calculateBeta(h2, k2, a2, r, h, func, n, m, double(b - a) / n, double(d - c) / m, a, c);
+
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = 0; j < m + 1; j++) {
+                h[i][j] =   beta * h[i][j] - r[i][j];
+            }
+        }
+
+        alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
+
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = 0; j < m + 1; j++) {
+                v[i][j] += alpha * h[i][j];
+            }
+        }
+
+    }
+}
+
+/*template <typename Function>
+
 void solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
     double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
     int i, j; //индексы
@@ -168,12 +294,13 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
         S = S + 1;
         if ((eps_max < eps) || (S >= Nmax)) { flag = true; }
     }
-}
+}*/
 
 
 struct func {
     double operator()(double x, double y) {
-        return abs(x * x - 2 * y);
+        double ret = abs(x * x - 2 * y);
+        return ret;
     } 
 
     void operator()() {
