@@ -1,6 +1,7 @@
 #pragma once
 #include "Dirikhle.h"
 #include <thread>
+#include <msclr\marshal_cppstd.h>
 
 namespace DirikhleGUI {
 
@@ -54,6 +55,8 @@ namespace DirikhleGUI {
 	private: System::Windows::Forms::DataGridView^ dataGridView1;
 	private: System::Windows::Forms::Button^ button1;
 	private: System::ComponentModel::IContainer^ components;
+	private: System::Windows::Forms::Label^ label6;
+	private: System::Windows::Forms::Label^ label7;
 
 	private: Thread^ thread2 = nullptr;
 
@@ -84,6 +87,8 @@ namespace DirikhleGUI {
 			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->label7 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
@@ -103,6 +108,7 @@ namespace DirikhleGUI {
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(100, 20);
 			this->textBox1->TabIndex = 1;
+			this->textBox1->Text = L"10";
 			// 
 			// label2
 			// 
@@ -119,6 +125,7 @@ namespace DirikhleGUI {
 			this->textBox2->Name = L"textBox2";
 			this->textBox2->Size = System::Drawing::Size(100, 20);
 			this->textBox2->TabIndex = 1;
+			this->textBox2->Text = L"10";
 			// 
 			// label3
 			// 
@@ -135,6 +142,7 @@ namespace DirikhleGUI {
 			this->textBox3->Name = L"textBox3";
 			this->textBox3->Size = System::Drawing::Size(100, 20);
 			this->textBox3->TabIndex = 1;
+			this->textBox3->Text = L"1000";
 			// 
 			// label4
 			// 
@@ -151,6 +159,7 @@ namespace DirikhleGUI {
 			this->textBox4->Name = L"textBox4";
 			this->textBox4->Size = System::Drawing::Size(100, 20);
 			this->textBox4->TabIndex = 1;
+			this->textBox4->Text = L"1e-8";
 			// 
 			// pictureBox1
 			// 
@@ -177,30 +186,50 @@ namespace DirikhleGUI {
 			this->textBox5->Name = L"textBox5";
 			this->textBox5->Size = System::Drawing::Size(100, 20);
 			this->textBox5->TabIndex = 1;
+			this->textBox5->Text = L"1.5278640450004206";
 			// 
 			// dataGridView1
 			// 
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Location = System::Drawing::Point(326, 24);
 			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->Size = System::Drawing::Size(824, 398);
+			this->dataGridView1->Size = System::Drawing::Size(1243, 620);
 			this->dataGridView1->TabIndex = 3;
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(15, 308);
+			this->button1->Location = System::Drawing::Point(15, 312);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->Size = System::Drawing::Size(118, 23);
 			this->button1->TabIndex = 4;
 			this->button1->Text = L"Вычислить";
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Location = System::Drawing::Point(15, 361);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(70, 13);
+			this->label6->TabIndex = 5;
+			this->label6->Text = L"Результаты:";
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Location = System::Drawing::Point(15, 386);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(0, 13);
+			this->label7->TabIndex = 6;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1179, 450);
+			this->ClientSize = System::Drawing::Size(1581, 648);
+			this->Controls->Add(this->label7);
+			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->pictureBox1);
@@ -220,6 +249,7 @@ namespace DirikhleGUI {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
+
 		}
 #pragma endregion
 		private: void BackgroundWorker1_DoWork() {
@@ -230,27 +260,34 @@ namespace DirikhleGUI {
 
 	private: System::Void pictureBox1_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+
+
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		int Nmax = 10000; // максимальное число итераций (не менее 1)
+		int Nmax = Convert::ToDouble(textBox3->Text); // максимальное число итераций (не менее 1)
 		int S = 0; // счетчик итераций
 		int S_2 = 0; // счетчик итераций
-		double eps = 1e-8; // минимально допустимый прирост
+		double eps = Convert::ToDouble(textBox4->Text); // минимально допустимый прирост
 		double eps_max = 0; // текущее значение прироста
 		double eps_max_2 = 0; // текущее значение прироста
 		double eps_cur = 0; // для подсчета текущего значения прироста
 		double error_max = 0; // для подсчета текущего значения прироста
-		double accuracy = 1000; // для подсчета текущего значения прироста
+		double accuracy = 1000; // точность
 		double a2, k2, h2; // ненулевые элементы матрицы (-A)
 
 		func my_func;
-		const int n = 10, m = 10; //размерность сетки
+		const int n = Convert::ToDouble(textBox1->Text); //размерность сетки
+		const int m = Convert::ToDouble(textBox2->Text); //размерность сетки
 		writeHeader(n, m);
 
 		std::vector<std::vector<double>> v(n + 1); // искомый вектор v
 		std::vector<std::vector<double>> v_2(2 * n + 1); // искомый вектор v с половинным шагом
 		std::vector<double> r((n - 1) * (m - 1)); // невязка
 		double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
-		double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
+		double w = 1.5278640450004206;
+		if (textBox5->Text != "1.5278640450004206") {
+			w = std::stod(msclr::interop::marshal_as<std::string>(textBox5->Text));
+		}
+		//double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
 		h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
 		k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
 		a2 = -2 * (h2 + k2);
@@ -309,23 +346,33 @@ namespace DirikhleGUI {
 				outfile << p << "\t" << e << "\t" << v_new << "\n";
 			}
 		//writeTable(n, m, vec_u, a, b, c, d, 8);
-		writeFinalTable(n, m, v, a, b, c, d, S, S_2, eps, eps_max, eps_max_2, error_max, r_norm, w, accuracy);
-		outfile.close();
-		
+		std::string results = writeFinalTable(n, m, v, a, b, c, d, S, S_2, eps, eps_max, eps_max_2, error_max, r_norm, w, accuracy);
+
+		String^ text = gcnew String(results.c_str());
+
+		label7->Text = text;
+
 		Process^ myProcess = gcnew Process();
 		myProcess->StartInfo->FileName = "python";
 		myProcess->StartInfo->Arguments = "show_plot.py";
 		myProcess->Start();
-		dataGridView1->RowCount = m;
-		dataGridView1->ColumnCount = n;
-		for (int r = 0; r < m; r++) {
+
+		
+
+		//dataGridView1->RowCount = m;
+		dataGridView1->ColumnCount = n+1;
+		dataGridView1->RowHeadersWidth = 100;
+		for (int r = 0; r < m+1; r++) {
 
 			DataGridViewRow^ row = gcnew DataGridViewRow();
+			row->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
+			//row->CreateCells(this->dataGridView1);
 
-			row->CreateCells(this->dataGridView1);
-
-			for (int c = 0; c < n; c++) {
-				row->Cells[c]->Value = (v[c][r]);
+			for (int c = 0; c < n+1; c++) {
+				DataGridViewCell^ cel = gcnew DataGridViewTextBoxCell();
+				cel->Value = v[r][c];
+				row->Cells->Add(cel);
+				dataGridView1->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
 			}
 
 			this->dataGridView1->Rows->Add(row);
