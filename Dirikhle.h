@@ -12,6 +12,7 @@
 #include <limits>
 #include <iomanip>
 #include <sstream>
+#include <algorithm>
 
 const double eps = std::numeric_limits<double>::epsilon();
 
@@ -21,6 +22,12 @@ std::string doubleToString(double num) {
     ss << num;
 
     return ss.str();
+}
+
+double setPresision(double num, int presision) {
+    num *= pow(10, presision + 1);
+
+    return double(int(num)) / pow(10, presision + 1);
 }
 
 

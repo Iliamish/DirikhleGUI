@@ -193,7 +193,7 @@ namespace DirikhleGUI {
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Location = System::Drawing::Point(326, 24);
 			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->Size = System::Drawing::Size(1243, 620);
+			this->dataGridView1->Size = System::Drawing::Size(1212, 620);
 			this->dataGridView1->TabIndex = 3;
 			// 
 			// button1
@@ -227,7 +227,7 @@ namespace DirikhleGUI {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1581, 648);
+			this->ClientSize = System::Drawing::Size(1540, 648);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button1);
@@ -359,9 +359,10 @@ namespace DirikhleGUI {
 
 		
 
-		//dataGridView1->RowCount = m;
+		dataGridView1->Rows->Clear();
 		dataGridView1->ColumnCount = n+1;
 		dataGridView1->RowHeadersWidth = 100;
+		dataGridView1->TopLeftHeaderCell->Value = "       Y\\X       ";
 		for (int r = 0; r < m+1; r++) {
 
 			DataGridViewRow^ row = gcnew DataGridViewRow();
@@ -370,7 +371,7 @@ namespace DirikhleGUI {
 
 			for (int c = 0; c < n+1; c++) {
 				DataGridViewCell^ cel = gcnew DataGridViewTextBoxCell();
-				cel->Value = v[r][c];
+				cel->Value = setPresision(v[r][c], 4);
 				row->Cells->Add(cel);
 				dataGridView1->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
 			}
