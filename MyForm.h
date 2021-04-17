@@ -57,6 +57,7 @@ namespace DirikhleGUI {
 	private: System::ComponentModel::IContainer^ components;
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::Label^ label7;
+	private: System::Windows::Forms::Button^ button2;
 
 	private: Thread^ thread2 = nullptr;
 
@@ -89,6 +90,7 @@ namespace DirikhleGUI {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->button2 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
@@ -104,7 +106,7 @@ namespace DirikhleGUI {
 			// 
 			// textBox1
 			// 
-			this->textBox1->Location = System::Drawing::Point(150, 165);
+			this->textBox1->Location = System::Drawing::Point(172, 165);
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(100, 20);
 			this->textBox1->TabIndex = 1;
@@ -121,7 +123,7 @@ namespace DirikhleGUI {
 			// 
 			// textBox2
 			// 
-			this->textBox2->Location = System::Drawing::Point(150, 191);
+			this->textBox2->Location = System::Drawing::Point(172, 191);
 			this->textBox2->Name = L"textBox2";
 			this->textBox2->Size = System::Drawing::Size(100, 20);
 			this->textBox2->TabIndex = 1;
@@ -138,7 +140,7 @@ namespace DirikhleGUI {
 			// 
 			// textBox3
 			// 
-			this->textBox3->Location = System::Drawing::Point(150, 243);
+			this->textBox3->Location = System::Drawing::Point(172, 243);
 			this->textBox3->Name = L"textBox3";
 			this->textBox3->Size = System::Drawing::Size(100, 20);
 			this->textBox3->TabIndex = 1;
@@ -155,7 +157,7 @@ namespace DirikhleGUI {
 			// 
 			// textBox4
 			// 
-			this->textBox4->Location = System::Drawing::Point(150, 217);
+			this->textBox4->Location = System::Drawing::Point(172, 217);
 			this->textBox4->Name = L"textBox4";
 			this->textBox4->Size = System::Drawing::Size(100, 20);
 			this->textBox4->TabIndex = 1;
@@ -182,7 +184,7 @@ namespace DirikhleGUI {
 			// 
 			// textBox5
 			// 
-			this->textBox5->Location = System::Drawing::Point(150, 269);
+			this->textBox5->Location = System::Drawing::Point(172, 269);
 			this->textBox5->Name = L"textBox5";
 			this->textBox5->Size = System::Drawing::Size(100, 20);
 			this->textBox5->TabIndex = 1;
@@ -202,7 +204,7 @@ namespace DirikhleGUI {
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(118, 23);
 			this->button1->TabIndex = 4;
-			this->button1->Text = L"Вычислить";
+			this->button1->Text = L"Старт";
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
@@ -223,11 +225,22 @@ namespace DirikhleGUI {
 			this->label7->Size = System::Drawing::Size(0, 13);
 			this->label7->TabIndex = 6;
 			// 
+			// button2
+			// 
+			this->button2->Location = System::Drawing::Point(87, 269);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(79, 20);
+			this->button2->TabIndex = 7;
+			this->button2->Text = L"Вычислить";
+			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1540, 648);
+			this->Controls->Add(this->button2);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button1);
@@ -378,6 +391,13 @@ namespace DirikhleGUI {
 
 			this->dataGridView1->Rows->Add(row);
 		}
+	}
+	private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+		const int n = Convert::ToDouble(textBox1->Text); //размерность сетки
+		const int m = Convert::ToDouble(textBox2->Text); //размерность сетки
+		double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
+		double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
+		textBox5->Text = gcnew String(doubleToString(w).c_str());
 	}
 };
 }
