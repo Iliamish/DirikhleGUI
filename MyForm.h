@@ -304,7 +304,7 @@ namespace DirikhleGUI {
 		eps_max = 0;
 		eps_cur = 0;
 		error_max = 0;
-		solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		//solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 		
 		for (j = 1; j < m; j++)
 			for (i = 1; i < n; i++) {
