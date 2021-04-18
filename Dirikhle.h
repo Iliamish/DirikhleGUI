@@ -183,6 +183,7 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
     a2 = -2 * (h2 + k2);
 
     std::vector<std::vector<double> >  h(n+1, std::vector<double>(m+1));
+    std::vector<std::vector<double> >  accuracy(n + 1, std::vector<double>(m + 1));
 
     auto m1 = [](double x, double y) {
         return equalsZero(sin(M_PI * y) * sin(M_PI * y));
@@ -210,6 +211,8 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
         v[i][m] = m4(a + i * (b - a) / n, d);
     }
 
+
+
     for (int i = 1; i < n; i++) {
         for (int j = 1; j < m; j++) {
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b-a)/n, c + j * (d-c)/m));
@@ -223,7 +226,9 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
         }
     }
     double beta = 0;
-    for (int k = 1; k < 10; k++) {
+    S = 1;
+    bool flag = false;
+   while(!flag) {
         std::vector<std::vector<double> >  r(n+1, std::vector<double>(m+1));
         for (int i = 1; i < n ; i++) {
             for (int j = 1; j < m ; j++) {
@@ -240,10 +245,20 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
 
         alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
 
+        double sum = 0;
+        double diff = 0;
         for (int i = 0; i < n + 1; i++) {
             for (int j = 0; j < m + 1; j++) {
+                diff = v[i][j];
                 v[i][j] += alpha * h[i][j];
+                diff -= v[i][j];
+                sum += diff * diff;
             }
+        }
+        sum = sqrt(sum);
+        S += 1;
+        if (sum < eps || S >= Nmax) {
+            flag = true;
         }
 
     }

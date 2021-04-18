@@ -275,12 +275,8 @@ namespace DirikhleGUI {
 		double a2, k2, h2; // ненулевые элементы матрицы (-A)
 
 		func my_func;
-<<<<<<< HEAD
-		const int n = 4, m = 4; //размерность сетки
-=======
 		const int n = Convert::ToDouble(textBox1->Text); //размерность сетки
 		const int m = Convert::ToDouble(textBox2->Text); //размерность сетки
->>>>>>> master
 		writeHeader(n, m);
 		std::vector<std::vector<double> >  v(n+1, std::vector<double>(m+1));
 		//std::vector<std::vector<double>> v(n + 1); // искомый вектор v
