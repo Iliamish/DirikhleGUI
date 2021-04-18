@@ -11,10 +11,27 @@
 #include <vector>
 #include <limits>
 #include <iomanip>
+#include <sstream>
+#include <algorithm>
 
 const double eps = std::numeric_limits<double>::epsilon();
 
-void writeFinalTable(int n, int m, std::vector<std::vector<double>> v, double a, double b, double c, double d, int S, int S_2, double eps, double eps_max, double eps_max_2, double error_max, double r_norm, double w, double accuracy) {
+std::string doubleToString(double num) {
+
+    std::stringstream ss;
+    ss << num;
+
+    return ss.str();
+}
+
+double setPresision(double num, int presision) {
+    num *= pow(10, presision + 1);
+
+    return double(int(num)) / pow(10, presision + 1);
+}
+
+
+std::string writeFinalTable(int n, int m, std::vector<std::vector<double>> v, double a, double b, double c, double d, int S, int S_2, double eps, double eps_max, double eps_max_2, double error_max, double r_norm, double w, double accuracy) {
     std::ofstream outfile("out.txt", std::ofstream::app);
     outfile << "Таблица № " << 1 << std::endl;
     for (size_t j = 0; j < m + 3; j++) {
@@ -39,17 +56,22 @@ void writeFinalTable(int n, int m, std::vector<std::vector<double>> v, double a,
             outfile << std::endl;
         }
     }
-    outfile << "\nТаблица № " << 7 << std::endl;
-    outfile << std::endl << "Параметр W: " << w << std::endl;
-    outfile << std::endl << "Число шагов: " << S << std::endl;
-    outfile << std::endl << "Число шагов с двойным шагом: " << S_2 << std::endl;
-    outfile << std::endl << "Точность метода: " << eps << std::endl;
-    outfile << std::endl << "Достигнутая точность: " << eps_max << std::endl;
-    outfile << std::endl << "Достигнутая точность с двойным шагом: " << eps_max_2 << std::endl;
-    //outfile << std::endl << "Погрешность: " << error_max << std::endl;
-    outfile << std::endl << "Норма невязки: " << r_norm << std::endl;
-    outfile << std::endl << "Точность max|v-v_2|: " << accuracy << std::endl;
+    outfile << "\nТаблица № " << 7 << "\n\n" << std::endl;
+    std::string returned_string = std::string("Параметр W: ") + doubleToString(w) + "\n\nЧисло шагов: " + doubleToString(S) + "\n\nЧисло шагов с двойным шагом: " + doubleToString(S_2) + "\n\nТочность метода: " +
+        doubleToString(eps) + "\n\nДостигнутая точность: " + doubleToString(eps_max) + "\n\nДостигнутая точность с двойным шагом: " + doubleToString(eps_max_2) + "\n\nНорма невязки: " + doubleToString(r_norm) + "\n\nТочность max |v - v_2|: " + doubleToString(accuracy);
+    
+    //outfile << std::endl << "параметр w: " << w << std::endl;
+    //outfile << std::endl << "число шагов: " << S << std::endl;
+    //outfile << std::endl << "число шагов с двойным шагом: " << S_2 << std::endl;
+    //outfile << std::endl << "точность метода: " << eps << std::endl;
+    //outfile << std::endl << "достигнутая точность: " << eps_max << std::endl;
+    //outfile << std::endl << "достигнутая точность с двойным шагом: " << eps_max_2 << std::endl;
+    ////outfile << std::endl << "погрешность: " << error_max << std::endl;
+    //outfile << std::endl << "норма невязки: " << r_norm << std::endl;
+    //outfile << std::endl << "точность max|v-v_2|: " << accuracy << std::endl;
+    outfile << returned_string;
     outfile.close();
+    return returned_string;
 }
 
 void writeTable(int n, int m, std::vector<std::vector<double>> v, double a, double b, double c, double d, int tableNumber) {
@@ -149,6 +171,7 @@ double w_optimal(double a, double b, double c, double d, double h1, double h2) {
         2 * h1 * h1 * sin(M_PI * h2 / (2 * l2)) * sin(M_PI * h2 / (2 * l2))) / (h1 * h1 + h2 * h2);
     return 2 / (1 + sqrt(lam_min * (2 - lam_min)));
 }
+
 
 template <typename Function>
 void solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
@@ -307,6 +330,10 @@ struct func {
         system("python show_plot.py");
     }
 };
+
+double presision(double x) {
+    return x;
+}
 
 //int main() {
 //    auto func = [](double x, double y) {
