@@ -219,12 +219,14 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
         }
     }
 
-    double alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n,double (d - c) / m, a, c);
+    double alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
     for (int i = 0; i < n + 1; i++) {
         for (int j = 0; j < m + 1; j++) {
             v[i][j] += alpha * h[i][j];
         }
     }
+  
+    eps_max=0;
     double beta = 0;
     S = 1;
     bool flag = false;
@@ -232,10 +234,10 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
         std::vector<std::vector<double> >  r(n+1, std::vector<double>(m+1));
         for (int i = 1; i < n ; i++) {
             for (int j = 1; j < m ; j++) {
-              r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * double(b-a)/n, c + j *double (d-c)/m));
+              r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b-a)/n, c + j * (d-c)/m));
             }
         }
-        beta = calculateBeta(h2, k2, a2, r, h, func, n, m, double(b - a) / n, double(d - c) / m, a, c);
+        beta = calculateBeta(h2, k2, a2, r, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
 
         for (int i = 0; i < n + 1; i++) {
             for (int j = 0; j < m + 1; j++) {
@@ -245,19 +247,20 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
 
         alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
 
-        double sum = 0;
-        double diff = 0;
+        double save_component=0;
+        eps_max = 0;
         for (int i = 0; i < n + 1; i++) {
-            for (int j = 0; j < m + 1; j++) {
-                diff = v[i][j];
+            for (int j = 0; j < m + 1; j++) {   
+                save_component = v[i][j];
                 v[i][j] += alpha * h[i][j];
-                diff -= v[i][j];
-                sum += diff * diff;
+                save_component = abs(v[i][j] - save_component);
+                if (save_component > eps_max)
+                    eps_max = save_component;
+
             }
         }
-        sum = sqrt(sum);
         S += 1;
-        if (sum < eps || S >= Nmax) {
+        if (eps_max <= eps || S >= Nmax) {
             flag = true;
         }
 
@@ -442,10 +445,11 @@ double presision(double x) {
 //    system("python show_plot.py");
 //}
 
-
-//return -((4 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y) * sin(M_PI * x * y) * sin(M_PI * x * y) -
-//    2 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * sin(M_PI * x * y) * sin(M_PI * x * y) +
-//    2 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y)) +
-//    (4 * M_PI * M_PI * x * x * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y) * sin(M_PI * x * y) * sin(M_PI * x * y) -
-//        2 * M_PI * M_PI * x * x * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * sin(M_PI * x * y) * sin(M_PI * x * y) +
-//        2 * M_PI * M_PI * x * x * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y)));
+auto funcTest = [](double x, double y) {
+//    return -((4 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y) * sin(M_PI * x * y) * sin(M_PI * x * y) -
+//        2 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * sin(M_PI * x * y) * sin(M_PI * x * y) +
+//        2 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y)) +
+//        (4 * M_PI * M_PI * x * x * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y) * sin(M_PI * x * y) * sin(M_PI * x * y) -
+//            2 * M_PI * M_PI * x * x * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * sin(M_PI * x * y) * sin(M_PI * x * y) +
+//            2 * M_PI * M_PI * x * x * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y)));
+};
