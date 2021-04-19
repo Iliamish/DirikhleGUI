@@ -335,7 +335,7 @@ namespace DirikhleGUI {
 					+ v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
 					k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
 						+ v[i][j - 1] * ((j - 1 == 0) ? 1 : 0))) + func_t;
-				r[(j - 1) * (m - 1) + (i - 1)] = v_new - f_t;
+				r[(j - 1) * (n - 1) + (i - 1)] = v_new - f_t;
 			}
 
 		double r_norm = 0;
@@ -384,7 +384,7 @@ namespace DirikhleGUI {
 
 			for (int c = 0; c < n+1; c++) {
 				DataGridViewCell^ cel = gcnew DataGridViewTextBoxCell();
-				cel->Value = setPresision(v[r][c], 4);
+				cel->Value = setPresision(v[c][r], 4);
 				row->Cells->Add(cel);
 				dataGridView1->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
 			}
