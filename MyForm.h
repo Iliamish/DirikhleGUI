@@ -342,7 +342,7 @@ namespace DirikhleGUI {
 					+ v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
 					k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
 						+ v[i][j - 1] * ((j - 1 == 0) ? 1 : 0))) + func_t;
-				r[(j - 1) * (m - 1) + (i - 1)] = v_new - f_t;
+				r[(j - 1) * (n - 1) + (i - 1)] = v_new - f_t;
 			}
 
 		double r_norm = 0;
