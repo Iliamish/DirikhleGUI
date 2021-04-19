@@ -280,7 +280,7 @@ namespace DirikhleGUI {
 		writeHeader(n, m);
 		std::vector<std::vector<double> >  v(n+1, std::vector<double>(m+1));
 		//std::vector<std::vector<double>> v(n + 1); // искомый вектор v
-		std::vector<std::vector<double>> v_2(2 * n + 1); // искомый вектор v с половинным шагом
+		std::vector<std::vector<double> >  v_2(2*n + 1, std::vector<double>(2*m + 1)); // искомый вектор v с половинным шагом
 		std::vector<double> r((n - 1) * (m - 1)); // невязка
 		double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
 		double w = 1.5278640450004206;
@@ -297,14 +297,14 @@ namespace DirikhleGUI {
 		double v_old; // старое значение преобразуемой компоненты вектора v
 		double v_new; // новое значение преобразуемой компоненты вектора v
 
-		//solve(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		solve(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 		S_2 = S;
 		S = 0;
 		eps_max_2 = eps_max;
 		eps_max = 0;
 		eps_cur = 0;
 		error_max = 0;
-		//solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 		
 		for (j = 1; j < m; j++)
 			for (i = 1; i < n; i++) {
