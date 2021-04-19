@@ -58,6 +58,10 @@ namespace DirikhleGUI {
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::Label^ label7;
 
+	private: System::Windows::Forms::ListBox^ listBox1;
+	private: System::Windows::Forms::RadioButton^ radioButton1;
+	private: System::Windows::Forms::RadioButton^ radioButton2;
+
 	private: Thread^ thread2 = nullptr;
 
 	private:
@@ -89,6 +93,9 @@ namespace DirikhleGUI {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
+			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
+			this->radioButton2 = (gcnew System::Windows::Forms::RadioButton());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
@@ -198,7 +205,7 @@ namespace DirikhleGUI {
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(15, 312);
+			this->button1->Location = System::Drawing::Point(12, 324);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(118, 23);
 			this->button1->TabIndex = 4;
@@ -223,11 +230,50 @@ namespace DirikhleGUI {
 			this->label7->Size = System::Drawing::Size(0, 13);
 			this->label7->TabIndex = 6;
 			// 
+			// listBox1
+			// 
+			this->listBox1->FormattingEnabled = true;
+			this->listBox1->Items->AddRange(gcnew cli::array< System::Object^  >(5) {
+				L"Метод Верхней Релаксации", L"Сопряженные градиенты (RECT)",
+					L"Сопряженные градиенты (CUT)", L"Метод Простых Итераций (RECT)", L"Метод Простых Итераций (CUT)"
+			});
+			this->listBox1->Location = System::Drawing::Point(136, 324);
+			this->listBox1->Name = L"listBox1";
+			this->listBox1->Size = System::Drawing::Size(184, 30);
+			this->listBox1->TabIndex = 8;
+			this->listBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::listBox1_SelectedIndexChanged);
+			// 
+			// radioButton1
+			// 
+			this->radioButton1->AutoSize = true;
+			this->radioButton1->Location = System::Drawing::Point(15, 301);
+			this->radioButton1->Name = L"radioButton1";
+			this->radioButton1->Size = System::Drawing::Size(73, 17);
+			this->radioButton1->TabIndex = 9;
+			this->radioButton1->TabStop = true;
+			this->radioButton1->Text = L"Тестовая";
+			this->radioButton1->UseVisualStyleBackColor = true;
+			// 
+			// radioButton2
+			// 
+			this->radioButton2->AutoSize = true;
+			this->radioButton2->Location = System::Drawing::Point(128, 301);
+			this->radioButton2->Name = L"radioButton2";
+			this->radioButton2->Size = System::Drawing::Size(75, 17);
+			this->radioButton2->TabIndex = 10;
+			this->radioButton2->TabStop = true;
+			this->radioButton2->Text = L"Основная";
+			this->radioButton2->UseVisualStyleBackColor = true;
+			this->radioButton2->CheckedChanged += gcnew System::EventHandler(this, &MyForm::radioButton2_CheckedChanged);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1540, 648);
+			this->Controls->Add(this->radioButton2);
+			this->Controls->Add(this->radioButton1);
+			this->Controls->Add(this->listBox1);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button1);
@@ -263,6 +309,9 @@ namespace DirikhleGUI {
 
 
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+		
+
+
 		int Nmax = Convert::ToDouble(textBox3->Text); // максимальное число итераций (не менее 1)
 		int S = 0; // счетчик итераций
 		int S_2 = 0; // счетчик итераций
@@ -274,7 +323,7 @@ namespace DirikhleGUI {
 		double accuracy = 1000; // точность
 		double a2, k2, h2; // ненулевые элементы матрицы (-A)
 
-		func my_func;
+
 		const int n = Convert::ToDouble(textBox1->Text); //размерность сетки
 		const int m = Convert::ToDouble(textBox2->Text); //размерность сетки
 		writeHeader(n, m);
@@ -296,16 +345,41 @@ namespace DirikhleGUI {
 		int i, j; //индексы
 		double v_old; // старое значение преобразуемой компоненты вектора v
 		double v_new; // новое значение преобразуемой компоненты вектора v
-
-		solve(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		if (radioButton1->Checked) {
+			if (listBox1->SelectedItem->ToString()=="Сопряженные градиенты (RECT)") {
+				solveTest(v_2, funcTest, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			} else {
+				if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (CUT)")
+				{
+					solveCut(v_2, funcTest, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+				}
+			}
+		}
+		else {
+			solve(v_2, funcDef, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		}
+	
 		S_2 = S;
 		S = 0;
 		eps_max_2 = eps_max;
 		eps_max = 0;
 		eps_cur = 0;
 		error_max = 0;
-		solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-		
+
+		if (radioButton1->Checked) {
+			if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
+				solveTest(v, funcTest, n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			}
+			else {
+				if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (CUT)")
+				{
+					solveCut(v, funcTest,  n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+				}
+			}
+		}
+		else {
+			solve(v, funcDef, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		}
 		for (j = 1; j < m; j++)
 			for (i = 1; i < n; i++) {
 				double k_1 = h2 * (v[i + 1][j] * ((i + 1 == n) ? 0 : 1)
@@ -316,7 +390,7 @@ namespace DirikhleGUI {
 				v_new = (k_3 + k_1 + k_2);
 				double p = a + i * (b - a) / n;
 				double e = c + j * (d - c) / m;
-				double func_t = my_func(p, e);
+				double func_t = funcTest(p, e);
 				double f_t = -(h2 * (v[i + 1][j] * ((i + 1 == n) ? 1 : 0)
 					+ v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
 					k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
@@ -362,7 +436,7 @@ namespace DirikhleGUI {
 		dataGridView1->ColumnCount = n+1;
 		dataGridView1->RowHeadersWidth = 100;
 		dataGridView1->TopLeftHeaderCell->Value = "       Y\\X       ";
-		for (int r = 0; r < m+1; r++) {
+		for (int r = m; r >=0; r--) {
 
 			DataGridViewRow^ row = gcnew DataGridViewRow();
 			row->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
@@ -370,7 +444,7 @@ namespace DirikhleGUI {
 
 			for (int c = 0; c < n+1; c++) {
 				DataGridViewCell^ cel = gcnew DataGridViewTextBoxCell();
-				cel->Value = setPresision(v[r][c], 4);
+				cel->Value = setPresision(v[c][r], 3);
 				row->Cells->Add(cel);
 				dataGridView1->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
 			}
@@ -378,5 +452,11 @@ namespace DirikhleGUI {
 			this->dataGridView1->Rows->Add(row);
 		}
 	}
+private: System::Void checkBox1_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void listBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void radioButton2_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }

@@ -192,7 +192,7 @@ double calculateAlphaCut(double h2, double k2, double a, std::vector<std::vector
         }
     }
     //4
-    for (int i = 3 * n / 4; i < n / 4; i++) {
+    for (int i = 3 * n / 4+1; i < n ; i++) {
         for (int j = 1; j < m; j++) {
             value = (a * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(ag + i * h, cg + j * k)) * hs[i][j];
             top += value;
@@ -249,7 +249,7 @@ double calculateBetaCut(double h2, double k2, double a, std::vector<std::vector<
         }
     }
     //4
-    for (int i = 3 * n / 4; i < n / 4; i++) {
+    for (int i = 3 * n / 4 + 1; i < n; i++) {
         for (int j = 1; j < m; j++) {
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * r[i][j];
             top += value;
@@ -379,6 +379,99 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
     }
 }
 
+template <typename Function>
+void solveTest(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+    int i, j; //индексы
+    double a2, k2, h2;
+
+    h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
+    k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
+    a2 = -2 * (h2 + k2);
+
+    std::vector<std::vector<double> >  h(n + 1, std::vector<double>(m + 1));
+    std::vector<std::vector<double> >  accuracy(n + 1, std::vector<double>(m + 1));
+
+    auto m1 = [](double x, double y) {
+        return exp(sin(M_PI * x * y)* sin(M_PI * x * y));
+    };
+    auto m2 = [](double x, double y) {
+        return exp(sin(M_PI * x * y) * sin(M_PI * x * y));
+    };
+    auto m3 = [](double x, double y) {
+        return exp(sin(M_PI * x * y) * sin(M_PI * x * y));
+    };
+    auto m4 = [](double x, double y) {
+        return exp(sin(M_PI * x * y) * sin(M_PI * x * y));
+    };
+
+    for (j = 0; j < m + 1; j++) {
+        v[0][j] = m1(a, c + (d - c) / m * j);
+    }
+    for (j = 0; j < m + 1; j++) {
+        v[n][j] = m2(b, c + (d - c) / m * j);
+    }
+    for (i = 0; i < n + 1; i++) {
+        v[i][0] = m3(a + i * (b - a) / n, c);
+    }
+    for (i = 0; i < n + 1; i++) {
+        v[i][m] = m4(a + i * (b - a) / n, d);
+    }
+ 
+
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++) {
+            h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+        }
+    }
+
+    double alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
+    for (int i = 0; i < n + 1; i++) {
+        for (int j = 0; j < m + 1; j++) {
+            v[i][j] += alpha * h[i][j];
+        }
+    }
+
+    eps_max = 0;
+    double beta = 0;
+    S = 1;
+    bool flag = false;
+    while (!flag) {
+        std::vector<std::vector<double> >  r(n + 1, std::vector<double>(m + 1));
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j < m; j++) {
+                r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+            }
+        }
+        beta = calculateBeta(h2, k2, a2, r, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
+
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = 0; j < m + 1; j++) {
+                h[i][j] = beta * h[i][j] - r[i][j];
+            }
+        }
+
+        alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
+
+        double save_component = 0;
+        eps_max = 0;
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = 0; j < m + 1; j++) {
+                save_component = v[i][j];
+                v[i][j] += alpha * h[i][j];
+                save_component = abs(v[i][j] - save_component);
+                if (save_component > eps_max)
+                    eps_max = save_component;
+
+            }
+        }
+        S += 1;
+        if (eps_max <= eps || S >= Nmax) {
+            flag = true;
+        }
+
+    }
+}
+
 
 template <typename Function>
 void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
@@ -395,17 +488,9 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
     auto m1 = [](double x, double y) {
         return equalsZero(exp(sin(M_PI*x*y)* sin(M_PI * x * y)));
     };
-    auto m2 = [](double x, double y) {
-        return equalsZero(sin(M_PI * 2 * y) * sin(M_PI * 2 * y));
-    };
-    auto m3 = [](double x, double y) {
-        return equalsZero(sin(M_PI * x) * sin(M_PI * x));
-    };
-    auto m4 = [](double x, double y) {
-        return equalsZero(sin(M_PI * 2 * x) * sin(M_PI * 2 * x));
-    };
+    
 
-    for (j = 0; j < 3*m/4 ; j++) {
+    for (j = 0; j <= 3*m/4 ; j++) {
         v[0][j] = m1(a, c + (d - c) / m * j);
     }
     for (j = 0; j <= m ; j++) {
@@ -423,11 +508,11 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
     }
 
     for (i = n / 2; i <= 3 * n / 4; i++) {
-          v[i][m/4] = m1(a + i * (b - a) / n, c + 3*(d - c) / 4);
+          v[i][3*m/4] = m1(a + i * (b - a) / n, c + 3*(d - c) / 4);
     }
 
     for (j = m / 4; j <= 3 * m / 4; j++) {
-        v[n/2][j] = m1(a+(b-2)/2, c + (d - c) / m * j);
+        v[n/2][j] = m1(a+(b-a)/2, c + (d - c) / m * j);
     }
 
     for (j = m / 4; j <= 3 * m / 4; j++) {
@@ -439,9 +524,9 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
     }
 
     for (j = 3*m / 4; j <=  m ; j++) {
-        v[n/4][j] = m1(a + 3 * (b - a) / 4, c + (d - c) / m * j);
+        v[n/4][j] = m1(a + (b - a) / 4, c + (d - c) / m * j);
     }
-    return;
+    std::vector<std::vector<double> >  check(n + 1, std::vector<double>(m + 1));
     // 1
     for (int i = 1; i <= n/4; i++) {
         for (int j = 1; j < 3*m/4; j++) {
@@ -450,25 +535,25 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
     }
     //2
     for (int i = n/4+1; i < n/2; i++) {
-        for (int j = 1; j < m; j++) {
+        for (int j = 1; j < m; j++) {        
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
         }
     }
     //3
     for (int i = n/2; i <= 3*n/4 ; i++) {
-        for (int j = 3*m/4+1; j < m; j++) {
+        for (int j = 3*m/4+1; j < m; j++) {            
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
         }
     }
     //4
-    for (int i = 3*n/4; i < n / 4; i++) {
-        for (int j = 1; j <  m ; j++) {
+    for (int i = 3*n/4+1; i < n ; i++) {
+        for (int j = 1; j <  m ; j++) {          
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
         }
     }
     //5
      for (int i = n/2; i <= 3*n/4; i++) {
-        for (int j = 1; j < m/4; j++) {
+        for (int j = 1; j < m/4; j++) {          
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
         }
     }
@@ -477,35 +562,34 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
    
     // 1
     for (int i = 1; i <= n / 4; i++) {
-        for (int j = 1; j < 3 * m / 4; j++) {
+        for (int j = 1; j < 3 * m / 4; j++) {         
             v[i][j] += alpha * h[i][j];
         }
     }
     //2
     for (int i = n / 4 + 1; i < n / 2; i++) {
-        for (int j = 1; j < m; j++) {
+        for (int j = 1; j < m; j++) {            
             v[i][j] += alpha * h[i][j];
         }
     }
     //3
     for (int i = n / 2; i <= 3 * n / 4; i++) {
-        for (int j = 3 * m / 4 + 1; j < m; j++) {
+        for (int j = 3 * m / 4 + 1; j < m; j++) {            
             v[i][j] += alpha * h[i][j];
         }
     }
     //4
-    for (int i = 3 * n / 4; i < n / 4; i++) {
-        for (int j = 1; j < m; j++) {
+    for (int i = 3 * n / 4+1; i < n ; i++) { 
+        for (int j = 1; j < m; j++) {     
             v[i][j] += alpha * h[i][j];
         }
     }
     //5
     for (int i = n / 2; i <= 3 * n / 4; i++) {
-        for (int j = 1; j < m / 4; j++) {
+        for (int j = 1; j < m / 4; j++) {         
             v[i][j] += alpha * h[i][j];
         }
     }
-
     eps_max = 0;
     double beta = 0;
     S = 1;
@@ -513,28 +597,27 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
     while (!flag) {
         std::vector<std::vector<double> >  r(n + 1, std::vector<double>(m + 1));
       
-
         // 1
         for (int i = 1; i <= n / 4; i++) {
-            for (int j = 1; j < 3 * m / 4; j++) {
+            for (int j = 1; j < 3 * m / 4; j++) {          
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //2
         for (int i = n / 4 + 1; i < n / 2; i++) {
-            for (int j = 1; j < m; j++) {
+            for (int j = 1; j < m; j++) {     
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //3
         for (int i = n / 2; i <= 3 * n / 4; i++) {
-            for (int j = 3 * m / 4 + 1; j < m; j++) {
+            for (int j = 3 * m / 4 + 1; j < m; j++) {          
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //4
-        for (int i = 3 * n / 4; i < n / 4; i++) {
-            for (int j = 1; j < m; j++) {
+        for (int i = 3 * n / 4+1; i < n ; i++) {
+            for (int j = 1; j < m; j++) {   
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
@@ -544,41 +627,42 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
-
+     
 
         beta = calculateBetaCut(h2, k2, a2, r, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
 
       
         // 1
         for (int i = 1; i <= n / 4; i++) {
-            for (int j = 1; j < 3 * m / 4; j++) {
+            for (int j = 1; j < 3 * m / 4; j++) { 
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
         //2
         for (int i = n / 4 + 1; i < n / 2; i++) {
-            for (int j = 1; j < m; j++) {
+            for (int j = 1; j < m; j++) {            
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
         //3
         for (int i = n / 2; i <= 3 * n / 4; i++) {
-            for (int j = 3 * m / 4 + 1; j < m; j++) {
+            for (int j = 3 * m / 4 + 1; j < m; j++) {            
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
         //4
-        for (int i = 3 * n / 4; i < n / 4; i++) {
-            for (int j = 1; j < m; j++) {
+        for (int i = 3 * n / 4+1; i < n ; i++) {
+            for (int j = 1; j < m; j++) {          
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
         //5
         for (int i = n / 2; i <= 3 * n / 4; i++) {
-            for (int j = 1; j < m / 4; j++) {
+            for (int j = 1; j < m / 4; j++) {         
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
+        
         alpha = calculateAlphaCut(h2, k2, a2, v, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
 
         double save_component = 0;
@@ -594,7 +678,7 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
             }
         }
         S += 1;
-        if (eps_max <= eps || S >= Nmax) {
+        if (eps_max < eps || S >= Nmax) {
             flag = true;
         }
 
@@ -672,16 +756,9 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
 }*/
 
 
-struct func {
-    double operator()(double x, double y) {
-        double ret = abs(x * x - 2 * y);
-        return ret;
-    } 
 
-    void operator()() {
-        system("python show_plot.py");
-    }
-};
+
+    
 
 double presision(double x) {
     return x;
@@ -778,12 +855,15 @@ double presision(double x) {
 //    outfile.close();
 //    system("python show_plot.py");
 //}
-
 auto funcTest = [](double x, double y) {
     return -((4 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y) * sin(M_PI * x * y) * sin(M_PI * x * y) -
-       2 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * sin(M_PI * x * y) * sin(M_PI * x * y) +
+        2 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * sin(M_PI * x * y) * sin(M_PI * x * y) +
         2 * M_PI * M_PI * y * y * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y)) +
         (4 * M_PI * M_PI * x * x * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y) * sin(M_PI * x * y) * sin(M_PI * x * y) -
             2 * M_PI * M_PI * x * x * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * sin(M_PI * x * y) * sin(M_PI * x * y) +
             2 * M_PI * M_PI * x * x * exp(sin(M_PI * x * y) * sin(M_PI * x * y)) * cos(M_PI * x * y) * cos(M_PI * x * y)));
+};
+
+auto funcDef = [](double x, double y) {
+    return abs(x * x - 2 * y);
 };
