@@ -55,9 +55,14 @@ namespace DirikhleGUI {
 	private: System::Windows::Forms::DataGridView^ dataGridView1;
 	private: System::Windows::Forms::Button^ button1;
 	private: System::ComponentModel::IContainer^ components;
-	private: System::Windows::Forms::Label^ label6;
+
 	private: System::Windows::Forms::Label^ label7;
 	private: System::Windows::Forms::Button^ button2;
+	private: System::Windows::Forms::Label^ label6;
+
+
+
+
 
 	private: Thread^ thread2 = nullptr;
 
@@ -88,9 +93,9 @@ namespace DirikhleGUI {
 			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->label6 = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
@@ -103,6 +108,7 @@ namespace DirikhleGUI {
 			this->label1->Size = System::Drawing::Size(121, 13);
 			this->label1->TabIndex = 0;
 			this->label1->Text = L"Число разбиений по X";
+			this->label1->Click += gcnew System::EventHandler(this, &MyForm::label1_Click);
 			// 
 			// textBox1
 			// 
@@ -166,7 +172,7 @@ namespace DirikhleGUI {
 			// pictureBox1
 			// 
 			this->pictureBox1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox1.Image")));
-			this->pictureBox1->Location = System::Drawing::Point(15, 24);
+			this->pictureBox1->Location = System::Drawing::Point(15, 12);
 			this->pictureBox1->Name = L"pictureBox1";
 			this->pictureBox1->Size = System::Drawing::Size(269, 135);
 			this->pictureBox1->TabIndex = 2;
@@ -178,24 +184,24 @@ namespace DirikhleGUI {
 			this->label5->AutoSize = true;
 			this->label5->Location = System::Drawing::Point(12, 272);
 			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(69, 13);
+			this->label5->Size = System::Drawing::Size(64, 13);
 			this->label5->TabIndex = 0;
-			this->label5->Text = L"Параметр w";
+			this->label5->Text = L"Параметр t";
 			// 
 			// textBox5
 			// 
 			this->textBox5->Location = System::Drawing::Point(172, 269);
 			this->textBox5->Name = L"textBox5";
+			this->textBox5->ReadOnly = true;
 			this->textBox5->Size = System::Drawing::Size(100, 20);
 			this->textBox5->TabIndex = 1;
-			this->textBox5->Text = L"1.5278640450004206";
 			// 
 			// dataGridView1
 			// 
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Location = System::Drawing::Point(326, 24);
+			this->dataGridView1->Location = System::Drawing::Point(326, 12);
 			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->Size = System::Drawing::Size(1212, 620);
+			this->dataGridView1->Size = System::Drawing::Size(1212, 651);
 			this->dataGridView1->TabIndex = 3;
 			// 
 			// button1
@@ -208,19 +214,10 @@ namespace DirikhleGUI {
 			this->button1->UseVisualStyleBackColor = true;
 			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
-			// label6
-			// 
-			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(15, 361);
-			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(70, 13);
-			this->label6->TabIndex = 5;
-			this->label6->Text = L"Результаты:";
-			// 
 			// label7
 			// 
 			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(15, 386);
+			this->label7->Location = System::Drawing::Point(12, 453);
 			this->label7->Name = L"label7";
 			this->label7->Size = System::Drawing::Size(0, 13);
 			this->label7->TabIndex = 6;
@@ -235,14 +232,23 @@ namespace DirikhleGUI {
 			this->button2->UseVisualStyleBackColor = true;
 			this->button2->Click += gcnew System::EventHandler(this, &MyForm::button2_Click);
 			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Location = System::Drawing::Point(15, 420);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(70, 13);
+			this->label6->TabIndex = 8;
+			this->label6->Text = L"Результаты:";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1540, 648);
+			this->ClientSize = System::Drawing::Size(1540, 675);
+			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->label7);
-			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->pictureBox1);
@@ -296,10 +302,11 @@ namespace DirikhleGUI {
 		std::vector<std::vector<double>> v_2(2 * n + 1); // искомый вектор v с половинным шагом
 		std::vector<double> r((n - 1) * (m - 1)); // невязка
 		double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
-		double w = 1.5278640450004206;
-		if (textBox5->Text != "1.5278640450004206") {
-			w = std::stod(msclr::interop::marshal_as<std::string>(textBox5->Text));
-		}
+		double t = t_optimal((b - a) / n, (d - c) / m, n, m);
+		textBox5->Text = ""+(t);
+		//if (textBox5->Text != "1.5278640450004206") {
+		//	w = std::stod(msclr::interop::marshal_as<std::string>(textBox5->Text));
+		//}
 		//double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
 		h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
 		k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
@@ -317,7 +324,7 @@ namespace DirikhleGUI {
 		eps_max = 0;
 		eps_cur = 0;
 		error_max = 0;
-		solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		auto max_diff = solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 
 
 		for (j = 1; j < m; j++)
@@ -359,11 +366,11 @@ namespace DirikhleGUI {
 				outfile << p << "\t" << e << "\t" << v_new << "\n";
 			}
 		//writeTable(n, m, vec_u, a, b, c, d, 8);
-		std::string results = writeFinalTable(n, m, v, a, b, c, d, S, S_2, eps, eps_max, eps_max_2, error_max, r_norm, w, accuracy);
+		std::string results = writeFinalTable(n, m, v, a, b, c, d, S, S_2, eps, eps_max, eps_max_2, error_max, r_norm, t, accuracy);
 
 		String^ text = gcnew String(results.c_str());
 
-		label7->Text = text;
+		label7->Text = text+L"\nmax_diff="+(max_diff);
 
 		Process^ myProcess = gcnew Process();
 		myProcess->StartInfo->FileName = "python";
@@ -384,7 +391,7 @@ namespace DirikhleGUI {
 
 			for (int c = 0; c < n+1; c++) {
 				DataGridViewCell^ cel = gcnew DataGridViewTextBoxCell();
-				cel->Value = setPresision(v[r][c], 4);
+				cel->Value = setPresision(v[c][r], 4);
 				row->Cells->Add(cel);
 				dataGridView1->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
 			}
@@ -396,8 +403,10 @@ namespace DirikhleGUI {
 		const int n = Convert::ToDouble(textBox1->Text); //размерность сетки
 		const int m = Convert::ToDouble(textBox2->Text); //размерность сетки
 		double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
-		double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
-		textBox5->Text = gcnew String(doubleToString(w).c_str());
+		double t = t_optimal((b - a) / n, (d - c) / m, n, m);
+		textBox5->Text = gcnew String(doubleToString(t).c_str());
 	}
+private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }
