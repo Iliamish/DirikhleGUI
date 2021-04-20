@@ -138,7 +138,8 @@ double t_optimal(double k, double h, const int n, const int m) {
 
 
 template <typename Function>
-double solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max, bool test=false) {
+double solve_(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max,
+	bool test = false) {
     double t = t_optimal((b - a) / n, (d - c) / m, n, m);
     int i, j; // индексы
     double a2, k2, h2; // ненулевые элементы матрицы (-A)
@@ -247,7 +248,7 @@ inline bool is_inside(int i, int j, int n, int m) {
 
 
 template <typename Function>
-double solve_(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+double solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
     double t = t_optimal((b - a) / n, (d - c) / m, n, m);
     int i, j; //индексы
     double a2, k2, h2; // ненулевые элементы матрицы (-A)
@@ -266,7 +267,7 @@ double solve_(std::vector<std::vector<double>>& v, Function func, const int n, c
                 v[i].push_back(u_test(a + i * (b - a) / n, c + (d - c) / m * j));
         }
     }
-    bool test = true;
+    
 
 
     /*for (j = 0; j < m + 1; j++) {
@@ -356,7 +357,10 @@ double solve_(std::vector<std::vector<double>>& v, Function func, const int n, c
             }
         }
     }
-
+	for (int i = 0; i < n+1; ++i) {
+		for (int j = 0; j < m+1; ++j)
+			if (!is_inside(i, j, n, m)) v[i][j] = 0;
+	}
     return max_diff;
 }
 

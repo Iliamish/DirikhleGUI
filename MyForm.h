@@ -290,7 +290,7 @@ namespace DirikhleGUI {
 		double eps_max_2 = 0; // текущее значение прироста
 		double eps_cur = 0; // для подсчета текущего значения прироста
 		double error_max = 0; // для подсчета текущего значения прироста
-		double accuracy = 1000; // точность
+		double accuracy = 0; // точность
 		double a2, k2, h2; // ненулевые элементы матрицы (-A)
 
 		func my_func;
@@ -353,8 +353,8 @@ namespace DirikhleGUI {
 
 		for (j = 1; j < m; j++)
 			for (i = 1; i < n; i++) {
-				if (abs(v[i][j] - v_2[i][j]) < accuracy) {
-					accuracy = abs(v[i][j] - v_2[i][j]);
+				if (abs(v[i][j] - v_2[2*i][2*j]) > accuracy) {
+					accuracy = abs(v[i][j] - v_2[2*i][2*j]);
 				}
 			}
 
