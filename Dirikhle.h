@@ -240,10 +240,12 @@ double presision(double x) {
 }
 
 inline bool is_inside(int i, int j, int n, int m) {
-    if (i == n || j == m || i==0 || j==0) return false;
-    if (i < n / 4 && j >= 3 * m / 4) return false;
-    if (i>=n/2 && i<3*n/4 && (j>=m/4 && j<3*m/4)) return false;
-    return true;
+    if (i >= 1 && i <= n / 4 && j >= 1 && j < (3 * m / 4)) return true;  // 1
+    if (i >= (n / 4 + 1) && i < n / 2 && j >= 1 && j < m) return true; // 2
+    if (i >= (n / 2) && i <= (3 * n / 4) && j >= (3 * m / 4 + 1) && j < m) return true; // 3
+    if (i >= (3 * n / 4 + 1) && i < n && j >= 1 && j < m) return true; // 4
+    if (i >= (n / 2) && i <= (3 * n / 4) && j >= 1 && j < (m / 4)) return true; // 5
+    return false;
 }
 
 
@@ -259,60 +261,50 @@ double solve(std::vector<std::vector<double>>& v, Function func, const int n, co
     h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
     k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
     a2 = -2 * (h2 + k2);
-    for (i = 0; i < n + 1; i++) {
-        for (j = 0; j < m + 1; j++) {
-            if (is_inside(i, j, n, m))
-                v[i].push_back(0);
-            else
-                v[i].push_back(u_test(a + i * (b - a) / n, c + (d - c) / m * j));
-        }
+    v.resize(n + 1);
+    for (int i = 0; i <= n; ++i) {
+        v[i].resize(m + 1);
+        for (int j = 0; j <= m; ++j) v[i][j] = 0;
     }
-    
+    auto m1 = [](double x, double y) {return u_test(x, y); };
 
-
-    /*for (j = 0; j < m + 1; j++) {
-        v[0][j] = u_test(a, c + (d - c) / m * j);
+    // Copy-Pasta
+    for (j = 0; j <= 3 * m / 4; j++) {
+        v[0][j] = m1(a, c + (d - c) / m * j);
     }
-    for (j = 0; j < m + 1; j++) {
-        v[n][j] = u_test(b, c + (d - c) / m * j);
+    for (j = 0; j <= m; j++) {
+        v[n][j] = m1(b, c + (d - c) / m * j);
     }
     for (i = 0; i < n + 1; i++) {
-        v[i][0] = u_test(a + i * (b - a) / n, c);
+        v[i][0] = m1(a + i * (b - a) / n, c);
     }
-    for (i = 0; i < n + 1; i++) {
-        v[i][m] = u_test(a + i * (b - a) / n, d);
-    }
-
-    double yb1 = c + 3 * (d - c) / 4;
-    int j1 = 3 * m / 4;
-    for (i = 0; i <= n /4; ++i) {
-        v[i][j1] = u_test(a + i * (b - a)/n, yb1);
+    for (i = n / 4; i < n + 1; i++) {
+        v[i][m] = m1(a + i * (b - a) / n, d);
     }
 
-    double xb1 = a + (b - a) / 4;
-    int i1 =  (n) / 4;
-    for (j = 3*m/4; j <= m; ++j) {
-        v[i1][j] = u_test(xb1, c + (d - c) / m * j);
+    for (i = n / 2; i <= 3 * n / 4; i++) {
+        v[i][m / 4] = m1(a + i * (b - a) / n, c + (d - c) / 4);
     }
 
-
-    double yb2 = c + 3 * (d - c) / 4;
-    double yb3 = c + (d - c) / 4;
-    int j2 = 3 * m / 4;
-    int j3 = m / 4;
-    for (i = n/  2; i <= 3 * n / 4; ++i) {
-        v[i][j2] = u_test(a + i * (b - a)/n, yb2);
-        v[i][j3] = u_test(a + i * (b - a)/n, yb3);
+    for (i = n / 2; i <= 3 * n / 4; i++) {
+        v[i][3 * m / 4] = m1(a + i * (b - a) / n, c + 3 * (d - c) / 4);
     }
 
-    double xb2 = a + (b - a) / 2;
-    double xb3 = a + 3 * (b - a) / 4;
-    int i2 = n / 2;
-    int i3 = 3 * n / 4;
-    for (j = m / 4; j <= 3 * m / 4; ++j) {
-        v[i2][j] = u_test(xb2, c + (d - c) / m * j);
-        v[i3][j] = u_test(xb3, c + (d - c) / m * j);
-    }*/
+    for (j = m / 4; j <= 3 * m / 4; j++) {
+        v[n / 2][j] = m1(a + (b - a) / 2, c + (d - c) / m * j);
+    }
+
+    for (j = m / 4; j <= 3 * m / 4; j++) {
+        v[3 * n / 4][j] = m1(a + 3 * (b - a) / 4, c + (d - c) / m * j);
+    }
+
+    for (i = 1; i <= n / 4; i++) {
+        v[i][3 * m / 4] = m1(a + i * (b - a) / n, c + 3 * (d - c) / 4);
+    }
+
+    for (j = 3 * m / 4; j <= m; j++) {
+        v[n / 4][j] = m1(a + (b - a) / 4, c + (d - c) / m * j);
+    }
 
 
     writeTable(n, m, v, a, b, c, d, 2);
@@ -320,8 +312,8 @@ double solve(std::vector<std::vector<double>>& v, Function func, const int n, co
 
     while (!flag) {
         eps_max = 0;
-        for (j = 1; j < m; j++) {
-            for (i = 1; i < n; i++) {
+        for (int i = 1; i < n; ++i) {
+            for (int j = 1; j < m; ++j) {
                 if (is_inside(i, j, n, m)) {
                     v_old = v[i][j];
                     v_new = -t * (h2 * (v[i + 1][j] + v[i - 1][j]) + k2 * (v[i][j + 1] + v[i][j - 1]));
@@ -337,7 +329,6 @@ double solve(std::vector<std::vector<double>>& v, Function func, const int n, co
         }
         
         v = v_1;
-
         if (S < 2) {
             writeTable(n, m, v, a, b, c, d, S * 2 + 4);
         }
@@ -357,104 +348,6 @@ double solve(std::vector<std::vector<double>>& v, Function func, const int n, co
             }
         }
     }
-	for (int i = 0; i < n+1; ++i) {
-		for (int j = 0; j < m+1; ++j)
-			if (!is_inside(i, j, n, m)) v[i][j] = 0;
-	}
+
     return max_diff;
 }
-
-
-//int main() {
-//    auto func = [](double x, double y) {
-//        return abs(x * x - 2 * y);
-//    };
-//
-//    auto u = [](double x, double y) {
-//        return exp(sin(M_PI * x * y) * sin(M_PI * x * y));
-//    };
-//
-//    int Nmax = 10000; // максимальное число итераций (не менее 1)
-//    int S = 0; // счетчик итераций
-//    int S_2 = 0; // счетчик итераций
-//    double eps = 1e-8; // минимально допустимый прирост
-//    double eps_max = 0; // текущее значение прироста
-//    double eps_max_2 = 0; // текущее значение прироста
-//    double eps_cur = 0; // для подсчета текущего значения прироста
-//    double error_max = 0; // для подсчета текущего значения прироста
-//    double accuracy = 1000; // для подсчета текущего значения прироста
-//    double a2, k2, h2; // ненулевые элементы матрицы (-A)
-//
-//
-//    const int n = 10, m = 10; //размерность сетки
-//    writeHeader(n, m);
-//
-//    std::vector<std::vector<double>> v(n + 1); // искомый вектор v
-//    std::vector<std::vector<double>> v_2(2 * n + 1); // искомый вектор v с половинным шагом
-//    std::vector<double> r((n - 1) * (m - 1)); // невязка
-//    double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
-//    double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
-//    h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
-//    k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
-//    a2 = -2 * (h2 + k2);
-//    bool flag = false;
-//
-//    int i, j; //индексы
-//    double v_old; // старое значение преобразуемой компоненты вектора v
-//    double v_new; // новое значение преобразуемой компоненты вектора v
-//
-//    solve(v_2, func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-//    S_2 = S;
-//    S = 0;
-//    eps_max_2 = eps_max;
-//    eps_max = 0;
-//    eps_cur = 0;
-//    error_max = 0;
-//    solve(v, func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-//
-//
-//    for (j = 1; j < m; j++)
-//        for (i = 1; i < n; i++) {
-//            double k_1 = h2 * (v[i + 1][j] * ((i + 1 == n) ? 0 : 1)
-//                + v[i - 1][j] * ((i - 1 == 0) ? 0 : 1));
-//            double k_2 = k2 * (v[i][j + 1] * ((j + 1 == m) ? 0 : 1)
-//                + v[i][j - 1] * ((j - 1 == 0) ? 0 : 1));
-//            double k_3 = v[i][j] * a2;
-//            v_new = (k_3 + k_1 + k_2);
-//            double p = a + i * (b - a) / n;
-//            double e = c + j * (d - c) / m;
-//            double func_t = func(p, e);
-//            double f_t = -(h2 * (v[i + 1][j] * ((i + 1 == n) ? 1 : 0)
-//                + v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
-//                k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
-//                    + v[i][j - 1] * ((j - 1 == 0) ? 1 : 0))) + func_t;
-//            r[(j - 1) * (m - 1) + (i - 1)] = v_new - f_t;
-//        }
-//
-//    double r_norm = 0;
-//    for (j = 0; j < r.size(); j++)
-//        r_norm += r[j] * r[j];
-//    r_norm = sqrt(r_norm);
-//    std::ofstream outfile("test.dat");
-//
-//    for (j = 1; j < m; j++)
-//        for (i = 1; i < n; i++) {
-//            if (abs(v[i][j] - v_2[i][j]) < accuracy) {
-//                accuracy = abs(v[i][j] - v_2[i][j]);
-//            }
-//        }
-//
-//    for (i = 0; i < n + 1; i++)
-//        for (j = 0; j < m + 1; j++) {
-//            v_new = v[i][j];
-//            double p = a + i * (b - a) / n;
-//            double e = c + j * (d - c) / m;
-//            outfile << p << "\t" << e << "\t" << v_new << "\n";
-//        }
-//    //writeTable(n, m, vec_u, a, b, c, d, 8);
-//    writeFinalTable(n, m, v, a, b, c, d, S, S_2, eps, eps_max, eps_max_2, error_max, r_norm, w, accuracy);
-//    outfile.close();
-//    system("python show_plot.py");
-//}
-
-
