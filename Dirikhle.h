@@ -235,6 +235,16 @@ struct func {
     }
 };
 
+struct func2 {
+    double operator()(double x, double y) {
+        return f_test(x,y);
+    }
+
+    void operator()() {
+        system("python show_plot.py");
+    }
+};
+
 double presision(double x) {
     return x;
 }

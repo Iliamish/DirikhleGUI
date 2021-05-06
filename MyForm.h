@@ -293,7 +293,8 @@ namespace DirikhleGUI {
 		double accuracy = 0; // точность
 		double a2, k2, h2; // ненулевые элементы матрицы (-A)
 
-		func my_func;
+		//func my_func;
+		func2 my_func; // “естова€ задача
 		const int n = Convert::ToDouble(textBox1->Text); //размерность сетки
 		const int m = Convert::ToDouble(textBox2->Text); //размерность сетки
 		writeHeader(n, m);
@@ -329,26 +330,28 @@ namespace DirikhleGUI {
 
 		for (j = 1; j < m; j++)
 			for (i = 1; i < n; i++) {
-				double k_1 = h2 * (v[i + 1][j] * ((i + 1 == n) ? 0 : 1)
-					+ v[i - 1][j] * ((i - 1 == 0) ? 0 : 1));
-				double k_2 = k2 * (v[i][j + 1] * ((j + 1 == m) ? 0 : 1)
-					+ v[i][j - 1] * ((j - 1 == 0) ? 0 : 1));
-				double k_3 = v[i][j] * a2;
-				v_new = (k_3 + k_1 + k_2);
-				double p = a + i * (b - a) / n;
-				double e = c + j * (d - c) / m;
-				double func_t = my_func(p, e);
-				double f_t = -(h2 * (v[i + 1][j] * ((i + 1 == n) ? 1 : 0)
-					+ v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
-					k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
-						+ v[i][j - 1] * ((j - 1 == 0) ? 1 : 0))) + func_t;
-				r[(j - 1) * (n - 1) + (i - 1)] = v_new - f_t;
+				if (is_inside(i, j, n, m)) {
+					double k_1 = h2 * (v[i + 1][j] * ((i + 1 == n) ? 0 : 1)
+						+ v[i - 1][j] * ((i - 1 == 0) ? 0 : 1));
+					double k_2 = k2 * (v[i][j + 1] * ((j + 1 == m) ? 0 : 1)
+						+ v[i][j - 1] * ((j - 1 == 0) ? 0 : 1));
+					double k_3 = v[i][j] * a2;
+					v_new = (k_3 + k_1 + k_2);
+					double p = a + i * (b - a) / n;
+					double e = c + j * (d - c) / m;
+					double func_t = my_func(p, e);
+					double f_t = -(h2 * (v[i + 1][j] * ((i + 1 == n) ? 1 : 0)
+						+ v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
+						k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
+							+ v[i][j - 1] * ((j - 1 == 0) ? 1 : 0))) + func_t;
+					r[(j - 1) * (n - 1) + (i - 1)] = v_new - f_t;
+				}
 			}
 
 		double r_norm = 0;
 		for (j = 0; j < r.size(); j++)
-			r_norm += r[j] * r[j];
-		r_norm = sqrt(r_norm);
+			if(fabs(r[j])>r_norm)
+				r_norm = fabs(r[j]);
 		std::ofstream outfile("test.dat");
 
 		for (j = 1; j < m; j++)
@@ -377,19 +380,18 @@ namespace DirikhleGUI {
 		myProcess->StartInfo->Arguments = "show_plot.py";
 		myProcess->Start();
 
-		
 
 		dataGridView1->Rows->Clear();
 		dataGridView1->ColumnCount = n+1;
 		dataGridView1->RowHeadersWidth = 100;
 		dataGridView1->TopLeftHeaderCell->Value = "       Y\\X       ";
-		for (int r = 0; r < m+1; r++) {
+		for (int r = 0; r < m+1; ++r) {
 
 			DataGridViewRow^ row = gcnew DataGridViewRow();
 			row->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
 			//row->CreateCells(this->dataGridView1);
 
-			for (int c = 0; c < n+1; c++) {
+			for (int c = 0; c < n+1; ++c) {
 				DataGridViewCell^ cel = gcnew DataGridViewTextBoxCell();
 				cel->Value = setPresision(v[c][r], 4);
 				row->Cells->Add(cel);
