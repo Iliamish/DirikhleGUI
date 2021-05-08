@@ -26,6 +26,10 @@ struct TResults {
     std::vector<std::pair<double, double> > res_vec;
     std::vector<double> local_mistake_vec;
     std::vector<double> h_vec;
+    std::vector<double> a;
+    std::vector<double> d;
+    std::vector<double> b;
+    std::vector<double> c;
     uint64_t ND = 0;
     uint64_t NH = 0;
     //double max_local_mistake;
@@ -62,10 +66,17 @@ void  tridiagonalMatrixAlg(const  std::vector <double>& longDiag, const  std::ve
 
 }
 
-TResults tfunc1(double start, double b, int n, double ksi, std::function<double(double)> f) {
+TResults tfunc1(double start, double b, int n, std::function<double(double)> f) {
     TResults result;
     double h = (b-start) / n;
 
+    for (int i = 0; i < n+1; i++) {
+        result.res_vec.push_back({ 0, 0 });
+    }
+    result.a.reserve(n);
+    result.b.reserve(n);
+    result.c.reserve(n + 1);
+    result.d.reserve(n);
     std::vector<double> longDiag;
     std::vector<double> shortUP;
     std::vector<double> shortDown;
@@ -75,17 +86,27 @@ TResults tfunc1(double start, double b, int n, double ksi, std::function<double(
     longDiag.push_back(1);
     shortUP.push_back(0);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n-1; i++) {
         shortDown.push_back(h);
         longDiag.push_back(4 * h);
-        shortUP.push_back(4);
-        answer.push_back(6 * ((f(start + (i + 2) * h) - f(start + (i + 1) * h) / h) - (f(start + (i + 1) * h) - f(start + i * h) / h)));
+        shortUP.push_back(h);
+        answer.push_back(6 * (((f(start + (i + 2) * h) - f(start + (i + 1) * h)) / h) - ((f(start + (i + 1) * h) - f(start + i * h)) / h)));
     }
 
     shortDown.push_back(0);
     longDiag.push_back(1);
     answer.push_back(0);
     tridiagonalMatrixAlg(longDiag, shortUP, shortDown, answer, result);
+
+    result.res_vec[0].first = start;
+    for (int i = 0; i < n; i++) {
+        result.a.push_back( f(start + (i + 1) * h));
+        result.res_vec[i + 1].first = start + (i + 1) * h;
+        result.c.push_back( result.res_vec[i].second);
+        result.d.push_back( (result.res_vec[i + 1].second - result.res_vec[i].second)/h);
+        result.b.push_back ( (f(start + (i + 1) * h) - f(start + (i)*h)) / h + result.res_vec[i + 1].second * h / 3 + result.res_vec[i].second * h / 6);
+    }
+    result.c.push_back(result.res_vec[n].second);
 
     return result;
 }
