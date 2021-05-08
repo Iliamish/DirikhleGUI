@@ -52,7 +52,7 @@ namespace DirikhleGUI {
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
 	private: System::Windows::Forms::Label^ label5;
 	private: System::Windows::Forms::TextBox^ textBox5;
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
+
 	private: System::Windows::Forms::Button^ button1;
 	private: System::ComponentModel::IContainer^ components;
 	private: System::Windows::Forms::Label^ label6;
@@ -61,6 +61,24 @@ namespace DirikhleGUI {
 	private: System::Windows::Forms::ListBox^ listBox1;
 	private: System::Windows::Forms::RadioButton^ radioButton1;
 	private: System::Windows::Forms::RadioButton^ radioButton2;
+	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ NumberOfColumn;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ X;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ V;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ UandDouble;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ SubVandSome;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column1;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ Column2;
+
+
+
+
+
+
+
+
+
+
 
 	private: Thread^ thread2 = nullptr;
 
@@ -89,13 +107,20 @@ namespace DirikhleGUI {
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
 			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton2 = (gcnew System::Windows::Forms::RadioButton());
+			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->NumberOfColumn = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->X = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->V = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->UandDouble = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->SubVandSome = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column1 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->Column2 = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
@@ -195,14 +220,6 @@ namespace DirikhleGUI {
 			this->textBox5->TabIndex = 1;
 			this->textBox5->Text = L"1.5278640450004206";
 			// 
-			// dataGridView1
-			// 
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Location = System::Drawing::Point(326, 24);
-			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->Size = System::Drawing::Size(1212, 620);
-			this->dataGridView1->TabIndex = 3;
-			// 
 			// button1
 			// 
 			this->button1->Location = System::Drawing::Point(12, 324);
@@ -266,18 +283,74 @@ namespace DirikhleGUI {
 			this->radioButton2->UseVisualStyleBackColor = true;
 			this->radioButton2->CheckedChanged += gcnew System::EventHandler(this, &MyForm::radioButton2_CheckedChanged);
 			// 
+			// dataGridView1
+			// 
+			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView1->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(7) {
+				this->NumberOfColumn,
+					this->X, this->V, this->UandDouble, this->SubVandSome, this->Column1, this->Column2
+			});
+			this->dataGridView1->Location = System::Drawing::Point(326, 24);
+			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->RowHeadersVisible = false;
+			this->dataGridView1->Size = System::Drawing::Size(1132, 612);
+			this->dataGridView1->TabIndex = 11;
+			this->dataGridView1->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &MyForm::dataGridView1_CellContentClick);
+			// 
+			// NumberOfColumn
+			// 
+			this->NumberOfColumn->HeaderText = L"i";
+			this->NumberOfColumn->Name = L"NumberOfColumn";
+			this->NumberOfColumn->ReadOnly = true;
+			// 
+			// X
+			// 
+			this->X->HeaderText = L"Xi-1";
+			this->X->Name = L"X";
+			this->X->ReadOnly = true;
+			this->X->Width = 50;
+			// 
+			// V
+			// 
+			this->V->HeaderText = L"Xi";
+			this->V->Name = L"V";
+			this->V->ReadOnly = true;
+			// 
+			// UandDouble
+			// 
+			this->UandDouble->HeaderText = L"ai";
+			this->UandDouble->Name = L"UandDouble";
+			this->UandDouble->ReadOnly = true;
+			// 
+			// SubVandSome
+			// 
+			this->SubVandSome->HeaderText = L"bi";
+			this->SubVandSome->Name = L"SubVandSome";
+			this->SubVandSome->ReadOnly = true;
+			this->SubVandSome->Width = 124;
+			// 
+			// Column1
+			// 
+			this->Column1->HeaderText = L"ci";
+			this->Column1->Name = L"Column1";
+			// 
+			// Column2
+			// 
+			this->Column2->HeaderText = L"di";
+			this->Column2->Name = L"Column2";
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1540, 648);
+			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->radioButton2);
 			this->Controls->Add(this->radioButton1);
 			this->Controls->Add(this->listBox1);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button1);
-			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->textBox4);
 			this->Controls->Add(this->label4);
@@ -346,140 +419,30 @@ namespace DirikhleGUI {
 		int i, j; //индексы
 		double v_old; // старое значение преобразуемой компоненты вектора v
 		double v_new; // новое значение преобразуемой компоненты вектора v
-		TResults result;
-		result.res_vec = { {0,0},{0,0},{0,0},{0,0} };
-		std::vector<double> longDiag = {1,0.6,1.2,1};
-		std::vector<double> shortUP = {0,0.2,0.4};
-		std::vector<double> shortDown = {0.1,0.2,0};
-		std::vector<double> answer = {0,0.9258,2.0154,0};
-		tridiagonalMatrixAlg(longDiag, shortUP, shortDown, answer, result);
-
-
-		if (radioButton1->Checked) {
-			if (listBox1->SelectedItem->ToString()=="Сопряженные градиенты (RECT)") {
-				solveTest(v_2, funcTest, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-			} else {
-				if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (CUT)")
-				{
-					solveCut(v_2, funcTest, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-				}
-			}
-		}
-		else {
-			if (listBox1->SelectedItem->ToString() == "Метод Верхней Релаксации") {
-				solveMVR(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-			}
-			else if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
-				solve(v_2, funcDef, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-			}
-		
-		}
+		a = -1;
+		b = 1;
+		TResults result= tfunc1(a, b, n, testFunc);
 	
-		S_2 = S;
-		S = 0;
-		eps_max_2 = eps_max;
-		eps_max = 0;
-		eps_cur = 0;
-		error_max = 0;
-
-		if (radioButton1->Checked) {
-			if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
-				solveTest(v, funcTest, n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-			}
-			else {
-				if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (CUT)")
-				{
-					solveCut(v, funcTest,  n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-				}
-			}
+		for (size_t i = 0; i < result.b.size(); i++) {
+	
+			dataGridView1->Rows->Add();
+			dataGridView1->Rows[i]->Cells[0]->Value = i+1;
+			dataGridView1->Rows[i]->Cells[1]->Value = equalsZero(result.res_vec[i].first);
+			dataGridView1->Rows[i]->Cells[2]->Value = equalsZero(result.res_vec[i + 1].first);
+			dataGridView1->Rows[i]->Cells[3]->Value = equalsZero(result.a[i]);
+			dataGridView1->Rows[i]->Cells[4]->Value = equalsZero(result.b[i]);
+			dataGridView1->Rows[i]->Cells[5]->Value = equalsZero(result.c[i]);
+			dataGridView1->Rows[i]->Cells[6]->Value = equalsZero (result.d[i]);
 		}
-		else {
-			if (listBox1->SelectedItem->ToString() == "Метод Верхней Релаксации") {
-				solveMVR(v, my_func,  n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-			}
-			else if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
-				solve(v, funcDef,  n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-			}
-		}
-		for (j = 1; j < m; j++)
-			for (i = 1; i < n; i++) {
-				double k_1 = h2 * (v[i + 1][j] * ((i + 1 == n) ? 0 : 1)
-					+ v[i - 1][j] * ((i - 1 == 0) ? 0 : 1));
-				double k_2 = k2 * (v[i][j + 1] * ((j + 1 == m) ? 0 : 1)
-					+ v[i][j - 1] * ((j - 1 == 0) ? 0 : 1));
-				double k_3 = v[i][j] * a2;
-				v_new = (k_3 + k_1 + k_2);
-				double p = a + i * (b - a) / n;
-				double e = c + j * (d - c) / m;
-				double func_t = my_func(p, e);
-				double f_t = -(h2 * (v[i + 1][j] * ((i + 1 == n) ? 1 : 0)
-					+ v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
-					k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
-						+ v[i][j - 1] * ((j - 1 == 0) ? 1 : 0))) + func_t;
-				r[(j - 1) * (n - 1) + (i - 1)] = v_new - f_t;
-			}
-
 		
-			
-		double r_norm = 0;
-		for (j = 0; j < r.size(); j++)
-			r_norm += r[j] * r[j];
-		r_norm = sqrt(r_norm);
-		std::ofstream outfile("test.dat");
-
-		for (j = 1; j < m; j++)
-			for (i = 1; i < n; i++) {
-				if (abs(v[i][j] - v_2[i][j]) < accuracy) {
-					accuracy = abs(v[i][j] - v_2[i][j]);
-				}
-			}
-
-		for (i = 0; i < n + 1; i++)
-			for (j = 0; j < m + 1; j++) {
-				v_new = v[i][j];
-				double p = a + i * (b - a) / n;
-				double e = c + j * (d - c) / m;
-				outfile << p << "\t" << e << "\t" << v_new << "\n";
-			}
-		//writeTable(n, m, vec_u, a, b, c, d, 8);
-		std::string results = writeFinalTable(n, m, v, a, b, c, d, S, S_2, eps, eps_max, eps_max_2, error_max, r_norm, w, accuracy);
-
-		String^ text = gcnew String(results.c_str());
-
-		label7->Text = text;
-
-		Process^ myProcess = gcnew Process();
-		myProcess->StartInfo->FileName = "python";
-		myProcess->StartInfo->Arguments = "show_plot.py";
-		myProcess->Start();
-
-		
-
-		dataGridView1->Rows->Clear();
-		dataGridView1->ColumnCount = n+1;
-		dataGridView1->RowHeadersWidth = 100;
-		dataGridView1->TopLeftHeaderCell->Value = "       Y\\X       ";
-		for (int r = m; r >=0; r--) {
-
-			DataGridViewRow^ row = gcnew DataGridViewRow();
-			row->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
-			//row->CreateCells(this->dataGridView1);
-
-			for (int c = 0; c < n+1; c++) {
-				DataGridViewCell^ cel = gcnew DataGridViewTextBoxCell();
-				cel->Value = setPresision(v[c][r], 3);
-				row->Cells->Add(cel);
-				dataGridView1->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
-			}
-
-			this->dataGridView1->Rows->Add(row);
-		}
 	}
 private: System::Void checkBox1_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void listBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void radioButton2_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void dataGridView1_CellContentClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
 }
 };
 }
