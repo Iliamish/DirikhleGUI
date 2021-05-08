@@ -336,6 +336,7 @@ namespace DirikhleGUI {
 		if (textBox5->Text != "1.5278640450004206") {
 			w = std::stod(msclr::interop::marshal_as<std::string>(textBox5->Text));
 		}
+		func my_func;
 		//double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
 		h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
 		k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
@@ -356,7 +357,13 @@ namespace DirikhleGUI {
 			}
 		}
 		else {
-			solve(v_2, funcDef, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			if (listBox1->SelectedItem->ToString() == "Метод Верхней Релаксации") {
+				solveMVR(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			}
+			else if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
+				solve(v_2, funcDef, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			}
+		
 		}
 	
 		S_2 = S;
@@ -378,7 +385,12 @@ namespace DirikhleGUI {
 			}
 		}
 		else {
-			solve(v, funcDef, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			if (listBox1->SelectedItem->ToString() == "Метод Верхней Релаксации") {
+				solveMVR(v, my_func,  n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			}
+			else if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
+				solve(v, funcDef,  n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			}
 		}
 		for (j = 1; j < m; j++)
 			for (i = 1; i < n; i++) {
@@ -390,14 +402,16 @@ namespace DirikhleGUI {
 				v_new = (k_3 + k_1 + k_2);
 				double p = a + i * (b - a) / n;
 				double e = c + j * (d - c) / m;
-				double func_t = funcTest(p, e);
+				double func_t = my_func(p, e);
 				double f_t = -(h2 * (v[i + 1][j] * ((i + 1 == n) ? 1 : 0)
 					+ v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
 					k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
 						+ v[i][j - 1] * ((j - 1 == 0) ? 1 : 0))) + func_t;
-				r[(j - 1) * (m - 1) + (i - 1)] = v_new - f_t;
+				r[(j - 1) * (n - 1) + (i - 1)] = v_new - f_t;
 			}
 
+		
+			
 		double r_norm = 0;
 		for (j = 0; j < r.size(); j++)
 			r_norm += r[j] * r[j];

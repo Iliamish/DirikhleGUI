@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 // Dirikhle_system.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
@@ -33,7 +33,7 @@ double setPresision(double num, int presision) {
 
 std::string writeFinalTable(int n, int m, std::vector<std::vector<double>> v, double a, double b, double c, double d, int S, int S_2, double eps, double eps_max, double eps_max_2, double error_max, double r_norm, double w, double accuracy) {
     std::ofstream outfile("out.txt", std::ofstream::app);
-    outfile << "Таблица № " << 1 << std::endl;
+    outfile << "РўР°Р±Р»РёС†Р° в„– " << 1 << std::endl;
     for (size_t j = 0; j < m + 3; j++) {
         if (j == 0) {
             outfile << std::setw(5) << "|" << std::setw(7) << "i" << "|";
@@ -56,19 +56,19 @@ std::string writeFinalTable(int n, int m, std::vector<std::vector<double>> v, do
             outfile << std::endl;
         }
     }
-    outfile << "\nТаблица № " << 7 << "\n\n" << std::endl;
-    std::string returned_string = std::string("Параметр W: ") + doubleToString(w) + "\n\nЧисло шагов: " + doubleToString(S) + "\n\nЧисло шагов с двойным шагом: " + doubleToString(S_2) + "\n\nТочность метода: " +
-        doubleToString(eps) + "\n\nДостигнутая точность: " + doubleToString(eps_max) + "\n\nДостигнутая точность с двойным шагом: " + doubleToString(eps_max_2) + "\n\nНорма невязки: " + doubleToString(r_norm) + "\n\nТочность max |v - v_2|: " + doubleToString(accuracy);
+    outfile << "\nРўР°Р±Р»РёС†Р° в„– " << 7 << "\n\n" << std::endl;
+    std::string returned_string = std::string("РџР°СЂР°РјРµС‚СЂ W: ") + doubleToString(w) + "\n\nР§РёСЃР»Рѕ С€Р°РіРѕРІ: " + doubleToString(S) + "\n\nР§РёСЃР»Рѕ С€Р°РіРѕРІ СЃ РґРІРѕР№РЅС‹Рј С€Р°РіРѕРј: " + doubleToString(S_2) + "\n\nРўРѕС‡РЅРѕСЃС‚СЊ РјРµС‚РѕРґР°: " +
+        doubleToString(eps) + "\n\nР”РѕСЃС‚РёРіРЅСѓС‚Р°СЏ С‚РѕС‡РЅРѕСЃС‚СЊ: " + doubleToString(eps_max) + "\n\nР”РѕСЃС‚РёРіРЅСѓС‚Р°СЏ С‚РѕС‡РЅРѕСЃС‚СЊ СЃ РґРІРѕР№РЅС‹Рј С€Р°РіРѕРј: " + doubleToString(eps_max_2) + "\n\nРќРѕСЂРјР° РЅРµРІСЏР·РєРё: " + doubleToString(r_norm) + "\n\nРўРѕС‡РЅРѕСЃС‚СЊ max |v - v_2|: " + doubleToString(accuracy);
     
-    //outfile << std::endl << "параметр w: " << w << std::endl;
-    //outfile << std::endl << "число шагов: " << S << std::endl;
-    //outfile << std::endl << "число шагов с двойным шагом: " << S_2 << std::endl;
-    //outfile << std::endl << "точность метода: " << eps << std::endl;
-    //outfile << std::endl << "достигнутая точность: " << eps_max << std::endl;
-    //outfile << std::endl << "достигнутая точность с двойным шагом: " << eps_max_2 << std::endl;
-    ////outfile << std::endl << "погрешность: " << error_max << std::endl;
-    //outfile << std::endl << "норма невязки: " << r_norm << std::endl;
-    //outfile << std::endl << "точность max|v-v_2|: " << accuracy << std::endl;
+    //outfile << std::endl << "РїР°СЂР°РјРµС‚СЂ w: " << w << std::endl;
+    //outfile << std::endl << "С‡РёСЃР»Рѕ С€Р°РіРѕРІ: " << S << std::endl;
+    //outfile << std::endl << "С‡РёСЃР»Рѕ С€Р°РіРѕРІ СЃ РґРІРѕР№РЅС‹Рј С€Р°РіРѕРј: " << S_2 << std::endl;
+    //outfile << std::endl << "С‚РѕС‡РЅРѕСЃС‚СЊ РјРµС‚РѕРґР°: " << eps << std::endl;
+    //outfile << std::endl << "РґРѕСЃС‚РёРіРЅСѓС‚Р°СЏ С‚РѕС‡РЅРѕСЃС‚СЊ: " << eps_max << std::endl;
+    //outfile << std::endl << "РґРѕСЃС‚РёРіРЅСѓС‚Р°СЏ С‚РѕС‡РЅРѕСЃС‚СЊ СЃ РґРІРѕР№РЅС‹Рј С€Р°РіРѕРј: " << eps_max_2 << std::endl;
+    ////outfile << std::endl << "РїРѕРіСЂРµС€РЅРѕСЃС‚СЊ: " << error_max << std::endl;
+    //outfile << std::endl << "РЅРѕСЂРјР° РЅРµРІСЏР·РєРё: " << r_norm << std::endl;
+    //outfile << std::endl << "С‚РѕС‡РЅРѕСЃС‚СЊ max|v-v_2|: " << accuracy << std::endl;
     outfile << returned_string;
     outfile.close();
     return returned_string;
@@ -76,7 +76,7 @@ std::string writeFinalTable(int n, int m, std::vector<std::vector<double>> v, do
 
 void writeTable(int n, int m, std::vector<std::vector<double>> v, double a, double b, double c, double d, int tableNumber) {
     std::ofstream outfile("out.txt", std::ofstream::app);
-    outfile << "Таблица № " << tableNumber << std::endl;
+    outfile << "РўР°Р±Р»РёС†Р° в„– " << tableNumber << std::endl;
     for (size_t j = 0; j < m + 3; j++) {
         if (j == 0) {
             outfile << std::setw(5) << "|" << std::setw(7) << "i" << "|";
@@ -106,8 +106,8 @@ void writeTable(int n, int m, std::vector<std::vector<double>> v, double a, doub
 void writeHeader(int n, int m) {
     std::ofstream outfile("out.txt");
 
-    outfile << "\n\nПрименение итерационного метода для решения разностных схем\nна примере задачи Дирихле для уравнения Пуассона\nКоманда №7." << std::endl;
-    outfile << "\nu = exp(sin(pi * x * y) * sin(pi * x * y)). Сетка " << n << "x" << m << ". Границы: a=0, b=2, c=0, d=1\n" << std::endl;
+    outfile << "\n\nРџСЂРёРјРµРЅРµРЅРёРµ РёС‚РµСЂР°С†РёРѕРЅРЅРѕРіРѕ РјРµС‚РѕРґР° РґР»СЏ СЂРµС€РµРЅРёСЏ СЂР°Р·РЅРѕСЃС‚РЅС‹С… СЃС…РµРј\nРЅР° РїСЂРёРјРµСЂРµ Р·Р°РґР°С‡Рё Р”РёСЂРёС…Р»Рµ РґР»СЏ СѓСЂР°РІРЅРµРЅРёСЏ РџСѓР°СЃСЃРѕРЅР°\nРљРѕРјР°РЅРґР° в„–7." << std::endl;
+    outfile << "\nu = exp(sin(pi * x * y) * sin(pi * x * y)). РЎРµС‚РєР° " << n << "x" << m << ". Р“СЂР°РЅРёС†С‹: a=0, b=2, c=0, d=1\n" << std::endl;
 }
 
 template <typename Function>
@@ -167,6 +167,7 @@ double calculateAlphaCut(double h2, double k2, double a, std::vector<std::vector
     // 1
     for (int i = 1; i <= n / 4; i++) {
         for (int j = 1; j < 3 * m / 4; j++) {
+       
             value = (a * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(ag + i * h, cg + j * k)) * hs[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -176,6 +177,7 @@ double calculateAlphaCut(double h2, double k2, double a, std::vector<std::vector
     //2
     for (int i = n / 4 + 1; i < n / 2; i++) {
         for (int j = 1; j < m; j++) {
+    
             value = (a * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(ag + i * h, cg + j * k)) * hs[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -185,6 +187,7 @@ double calculateAlphaCut(double h2, double k2, double a, std::vector<std::vector
     //3
     for (int i = n / 2; i <= 3 * n / 4; i++) {
         for (int j = 3 * m / 4 + 1; j < m; j++) {
+     
             value = (a * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(ag + i * h, cg + j * k)) * hs[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -194,6 +197,7 @@ double calculateAlphaCut(double h2, double k2, double a, std::vector<std::vector
     //4
     for (int i = 3 * n / 4+1; i < n ; i++) {
         for (int j = 1; j < m; j++) {
+    
             value = (a * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(ag + i * h, cg + j * k)) * hs[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -203,6 +207,7 @@ double calculateAlphaCut(double h2, double k2, double a, std::vector<std::vector
     //5
     for (int i = n / 2; i <= 3 * n / 4; i++) {
         for (int j = 1; j < m / 4; j++) {
+       
             value = (a * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(ag + i * h, cg + j * k)) * hs[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -224,6 +229,7 @@ double calculateBetaCut(double h2, double k2, double a, std::vector<std::vector<
     // 1
     for (int i = 1; i <= n / 4; i++) {
         for (int j = 1; j < 3 * m / 4; j++) {
+      
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * r[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -233,6 +239,7 @@ double calculateBetaCut(double h2, double k2, double a, std::vector<std::vector<
     //2
     for (int i = n / 4 + 1; i < n / 2; i++) {
         for (int j = 1; j < m; j++) {
+      
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * r[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -242,6 +249,7 @@ double calculateBetaCut(double h2, double k2, double a, std::vector<std::vector<
     //3
     for (int i = n / 2; i <= 3 * n / 4; i++) {
         for (int j = 3 * m / 4 + 1; j < m; j++) {
+   
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * r[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -251,6 +259,7 @@ double calculateBetaCut(double h2, double k2, double a, std::vector<std::vector<
     //4
     for (int i = 3 * n / 4 + 1; i < n; i++) {
         for (int j = 1; j < m; j++) {
+         
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * r[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -260,6 +269,7 @@ double calculateBetaCut(double h2, double k2, double a, std::vector<std::vector<
     //5
     for (int i = n / 2; i <= 3 * n / 4; i++) {
         for (int j = 1; j < m / 4; j++) {
+        
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * r[i][j];
             top += value;
             value = (a * hs[i][j] + h2 * hs[i - 1][j] + h2 * hs[i + 1][j] + k2 * hs[i][j - 1] + k2 * hs[i][j + 1]) * hs[i][j];
@@ -287,7 +297,7 @@ double w_optimal(double a, double b, double c, double d, double h1, double h2) {
 
 template <typename Function>
 void solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
-    int i, j; //индексы
+    int i, j; //РёРЅРґРµРєСЃС‹
     double a2, k2, h2;
 
     h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
@@ -381,7 +391,7 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
 
 template <typename Function>
 void solveTest(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
-    int i, j; //индексы
+    int i, j; //РёРЅРґРµРєСЃС‹
     double a2, k2, h2;
 
     h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
@@ -475,7 +485,7 @@ void solveTest(std::vector<std::vector<double>>& v, Function func, const int n, 
 
 template <typename Function>
 void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
-    int i, j; //индексы
+    int i, j; //РёРЅРґРµРєСЃС‹
     double a2, k2, h2;
 
     h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
@@ -530,30 +540,35 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
     // 1
     for (int i = 1; i <= n/4; i++) {
         for (int j = 1; j < 3*m/4; j++) {
+            check[i][j] += 1;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
         }
     }
     //2
     for (int i = n/4+1; i < n/2; i++) {
-        for (int j = 1; j < m; j++) {        
+        for (int j = 1; j < m; j++) {
+            check[i][j] += 2;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
         }
     }
     //3
     for (int i = n/2; i <= 3*n/4 ; i++) {
-        for (int j = 3*m/4+1; j < m; j++) {            
+        for (int j = 3*m/4+1; j < m; j++) {
+            check[i][j] += 3;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
         }
     }
     //4
     for (int i = 3*n/4+1; i < n ; i++) {
         for (int j = 1; j <  m ; j++) {          
+            check[i][j] += 4;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
         }
     }
     //5
      for (int i = n/2; i <= 3*n/4; i++) {
-        for (int j = 1; j < m/4; j++) {          
+        for (int j = 1; j < m/4; j++) { 
+            check[i][j] += 5;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
         }
     }
@@ -562,31 +577,36 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
    
     // 1
     for (int i = 1; i <= n / 4; i++) {
-        for (int j = 1; j < 3 * m / 4; j++) {         
+        for (int j = 1; j < 3 * m / 4; j++) {      
+            check[i][j] += 1;
             v[i][j] += alpha * h[i][j];
         }
     }
     //2
     for (int i = n / 4 + 1; i < n / 2; i++) {
-        for (int j = 1; j < m; j++) {            
+        for (int j = 1; j < m; j++) {        
+            check[i][j] += 2;
             v[i][j] += alpha * h[i][j];
         }
     }
     //3
     for (int i = n / 2; i <= 3 * n / 4; i++) {
-        for (int j = 3 * m / 4 + 1; j < m; j++) {            
+        for (int j = 3 * m / 4 + 1; j < m; j++) {        
+            check[i][j] += 3;
             v[i][j] += alpha * h[i][j];
         }
     }
     //4
     for (int i = 3 * n / 4+1; i < n ; i++) { 
         for (int j = 1; j < m; j++) {     
+            check[i][j] += 4;
             v[i][j] += alpha * h[i][j];
         }
     }
     //5
     for (int i = n / 2; i <= 3 * n / 4; i++) {
-        for (int j = 1; j < m / 4; j++) {         
+        for (int j = 1; j < m / 4; j++) {
+            check[i][j] += 5;
             v[i][j] += alpha * h[i][j];
         }
     }
@@ -599,31 +619,36 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
       
         // 1
         for (int i = 1; i <= n / 4; i++) {
-            for (int j = 1; j < 3 * m / 4; j++) {          
+            for (int j = 1; j < 3 * m / 4; j++) {  
+                check[i][j] += 1;
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //2
         for (int i = n / 4 + 1; i < n / 2; i++) {
-            for (int j = 1; j < m; j++) {     
+            for (int j = 1; j < m; j++) { 
+                check[i][j] += 2;
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //3
         for (int i = n / 2; i <= 3 * n / 4; i++) {
-            for (int j = 3 * m / 4 + 1; j < m; j++) {          
+            for (int j = 3 * m / 4 + 1; j < m; j++) {     
+                check[i][j] += 3;
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //4
         for (int i = 3 * n / 4+1; i < n ; i++) {
             for (int j = 1; j < m; j++) {   
+                check[i][j] += 4;
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //5
         for (int i = n / 2; i <= 3 * n / 4; i++) {
             for (int j = 1; j < m / 4; j++) {
+                check[i][j] += 5;
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
@@ -631,34 +656,45 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
 
         beta = calculateBetaCut(h2, k2, a2, r, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
 
-      
+      /*
         // 1
         for (int i = 1; i <= n / 4; i++) {
             for (int j = 1; j < 3 * m / 4; j++) { 
+                check[i][j] += 1;
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
         //2
         for (int i = n / 4 + 1; i < n / 2; i++) {
             for (int j = 1; j < m; j++) {            
+                check[i][j] += 2;
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
         //3
         for (int i = n / 2; i <= 3 * n / 4; i++) {
-            for (int j = 3 * m / 4 + 1; j < m; j++) {            
+            for (int j = 3 * m / 4 + 1; j < m; j++) {         
+                check[i][j] += 3;
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
         //4
         for (int i = 3 * n / 4+1; i < n ; i++) {
-            for (int j = 1; j < m; j++) {          
+            for (int j = 1; j < m; j++) {       
+                check[i][j] += 4;
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
         //5
         for (int i = n / 2; i <= 3 * n / 4; i++) {
-            for (int j = 1; j < m / 4; j++) {         
+            for (int j = 1; j < m / 4; j++) {      
+                check[i][j] += 5;
+                h[i][j] = beta * h[i][j] - r[i][j];
+            }
+        }
+        */
+        for (int i = 0; i < n + 1; i++) {
+            for (int j = 0; j < m + 1; j++) {
                 h[i][j] = beta * h[i][j] - r[i][j];
             }
         }
@@ -677,8 +713,9 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
 
             }
         }
+     
         S += 1;
-        if (eps_max < eps || S >= Nmax) {
+        if (S >= Nmax) {
             flag = true;
         }
 
@@ -689,12 +726,12 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
 
 void solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
     double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
-    int i, j; //индексы
-    double a2, k2, h2; // ненулевые элементы матрицы (-A)
-    double v_old; // старое значение преобразуемой компоненты вектора v
-    double v_new; // новое значение преобразуемой компоненты вектора v
-    bool flag = false; // условие остановки
-    double eps_cur = 0; // для подсчета текущего значения прироста
+    int i, j; //РёРЅРґРµРєСЃС‹
+    double a2, k2, h2; // РЅРµРЅСѓР»РµРІС‹Рµ СЌР»РµРјРµРЅС‚С‹ РјР°С‚СЂРёС†С‹ (-A)
+    double v_old; // СЃС‚Р°СЂРѕРµ Р·РЅР°С‡РµРЅРёРµ РїСЂРµРѕР±СЂР°Р·СѓРµРјРѕР№ РєРѕРјРїРѕРЅРµРЅС‚С‹ РІРµРєС‚РѕСЂР° v
+    double v_new; // РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїСЂРµРѕР±СЂР°Р·СѓРµРјРѕР№ РєРѕРјРїРѕРЅРµРЅС‚С‹ РІРµРєС‚РѕСЂР° v
+    bool flag = false; // СѓСЃР»РѕРІРёРµ РѕСЃС‚Р°РЅРѕРІРєРё
+    double eps_cur = 0; // РґР»СЏ РїРѕРґСЃС‡РµС‚Р° С‚РµРєСѓС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїСЂРёСЂРѕСЃС‚Р°
     h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
     k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
     a2 = -2 * (h2 + k2);
@@ -773,34 +810,34 @@ double presision(double x) {
 //        return exp(sin(M_PI * x * y) * sin(M_PI * x * y));
 //    };
 //
-//    int Nmax = 10000; // максимальное число итераций (не менее 1)
-//    int S = 0; // счетчик итераций
-//    int S_2 = 0; // счетчик итераций
-//    double eps = 1e-8; // минимально допустимый прирост
-//    double eps_max = 0; // текущее значение прироста
-//    double eps_max_2 = 0; // текущее значение прироста
-//    double eps_cur = 0; // для подсчета текущего значения прироста
-//    double error_max = 0; // для подсчета текущего значения прироста
-//    double accuracy = 1000; // для подсчета текущего значения прироста
-//    double a2, k2, h2; // ненулевые элементы матрицы (-A)
+//    int Nmax = 10000; // РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ С‡РёСЃР»Рѕ РёС‚РµСЂР°С†РёР№ (РЅРµ РјРµРЅРµРµ 1)
+//    int S = 0; // СЃС‡РµС‚С‡РёРє РёС‚РµСЂР°С†РёР№
+//    int S_2 = 0; // СЃС‡РµС‚С‡РёРє РёС‚РµСЂР°С†РёР№
+//    double eps = 1e-8; // РјРёРЅРёРјР°Р»СЊРЅРѕ РґРѕРїСѓСЃС‚РёРјС‹Р№ РїСЂРёСЂРѕСЃС‚
+//    double eps_max = 0; // С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ РїСЂРёСЂРѕСЃС‚Р°
+//    double eps_max_2 = 0; // С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ РїСЂРёСЂРѕСЃС‚Р°
+//    double eps_cur = 0; // РґР»СЏ РїРѕРґСЃС‡РµС‚Р° С‚РµРєСѓС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїСЂРёСЂРѕСЃС‚Р°
+//    double error_max = 0; // РґР»СЏ РїРѕРґСЃС‡РµС‚Р° С‚РµРєСѓС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїСЂРёСЂРѕСЃС‚Р°
+//    double accuracy = 1000; // РґР»СЏ РїРѕРґСЃС‡РµС‚Р° С‚РµРєСѓС‰РµРіРѕ Р·РЅР°С‡РµРЅРёСЏ РїСЂРёСЂРѕСЃС‚Р°
+//    double a2, k2, h2; // РЅРµРЅСѓР»РµРІС‹Рµ СЌР»РµРјРµРЅС‚С‹ РјР°С‚СЂРёС†С‹ (-A)
 //
 //
-//    const int n = 10, m = 10; //размерность сетки
+//    const int n = 10, m = 10; //СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ СЃРµС‚РєРё
 //    writeHeader(n, m);
 //
-//    std::vector<std::vector<double>> v(n + 1); // искомый вектор v
-//    std::vector<std::vector<double>> v_2(2 * n + 1); // искомый вектор v с половинным шагом
-//    std::vector<double> r((n - 1) * (m - 1)); // невязка
-//    double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
+//    std::vector<std::vector<double>> v(n + 1); // РёСЃРєРѕРјС‹Р№ РІРµРєС‚РѕСЂ v
+//    std::vector<std::vector<double>> v_2(2 * n + 1); // РёСЃРєРѕРјС‹Р№ РІРµРєС‚РѕСЂ v СЃ РїРѕР»РѕРІРёРЅРЅС‹Рј С€Р°РіРѕРј
+//    std::vector<double> r((n - 1) * (m - 1)); // РЅРµРІСЏР·РєР°
+//    double a = 0, b = 2, c = 0, d = 1; // РіСЂР°РЅРёС†С‹ РѕР±Р»Р°СЃС‚Рё РѕРїСЂРµРґРµР»РµРЅРёСЏ СѓСЂР°РІРЅРµРЅРёСЏ
 //    double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
 //    h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
 //    k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
 //    a2 = -2 * (h2 + k2);
 //    bool flag = false;
 //
-//    int i, j; //индексы
-//    double v_old; // старое значение преобразуемой компоненты вектора v
-//    double v_new; // новое значение преобразуемой компоненты вектора v
+//    int i, j; //РёРЅРґРµРєСЃС‹
+//    double v_old; // СЃС‚Р°СЂРѕРµ Р·РЅР°С‡РµРЅРёРµ РїСЂРµРѕР±СЂР°Р·СѓРµРјРѕР№ РєРѕРјРїРѕРЅРµРЅС‚С‹ РІРµРєС‚РѕСЂР° v
+//    double v_new; // РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїСЂРµРѕР±СЂР°Р·СѓРµРјРѕР№ РєРѕРјРїРѕРЅРµРЅС‚С‹ РІРµРєС‚РѕСЂР° v
 //
 //    solve(v_2, func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 //    S_2 = S;
@@ -866,4 +903,84 @@ auto funcTest = [](double x, double y) {
 
 auto funcDef = [](double x, double y) {
     return abs(x * x - 2 * y);
+};
+
+template <typename Function>
+void solveMVR(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+    double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
+    int i, j; //ГЁГ­Г¤ГҐГЄГ±Г»
+    double a2, k2, h2; // Г­ГҐГ­ГіГ«ГҐГўГ»ГҐ ГЅГ«ГҐГ¬ГҐГ­ГІГ» Г¬Г ГІГ°ГЁГ¶Г» (-A)
+    double v_old; // Г±ГІГ Г°Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ ГЇГ°ГҐГ®ГЎГ°Г Г§ГіГҐГ¬Г®Г© ГЄГ®Г¬ГЇГ®Г­ГҐГ­ГІГ» ГўГҐГЄГІГ®Г°Г  v
+    double v_new; // Г­Г®ГўГ®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ ГЇГ°ГҐГ®ГЎГ°Г Г§ГіГҐГ¬Г®Г© ГЄГ®Г¬ГЇГ®Г­ГҐГ­ГІГ» ГўГҐГЄГІГ®Г°Г  v
+    bool flag = false; // ГіГ±Г«Г®ГўГЁГҐ Г®Г±ГІГ Г­Г®ГўГЄГЁ
+    double eps_cur = 0; // Г¤Г«Гї ГЇГ®Г¤Г±Г·ГҐГІГ  ГІГҐГЄГіГ№ГҐГЈГ® Г§Г­Г Г·ГҐГ­ГЁГї ГЇГ°ГЁГ°Г®Г±ГІГ 
+    h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
+    k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
+    a2 = -2 * (h2 + k2);
+    for (i = 0; i < n + 1; i++) {
+        for (j = 0; j < m + 1; j++) {
+            v[i].push_back(0);
+        }
+    }
+
+    auto m1 = [](double x, double y) {
+        return equalsZero(sin(M_PI * y) * sin(M_PI * y));
+    };
+    auto m2 = [](double x, double y) {
+        return equalsZero(sin(M_PI * 2 * y) * sin(M_PI * 2 * y));
+    };
+    auto m3 = [](double x, double y) {
+        return equalsZero(sin(M_PI * x) * sin(M_PI * x));
+    };
+    auto m4 = [](double x, double y) {
+        return equalsZero(sin(M_PI * 2 * x) * sin(M_PI * 2 * x));
+    };
+
+    for (j = 0; j < m + 1; j++) {
+        v[0][j] = m1(a, c + (d - c) / m * j);
+    }
+    for (j = 0; j < m + 1; j++) {
+        v[n][j] = m2(b, c + (d - c) / m * j);
+    }
+    for (i = 0; i < n + 1; i++) {
+        v[i][0] = m3(a + i * (b - a) / n, c);
+    }
+    for (i = 0; i < n + 1; i++) {
+        v[i][m] = m4(a + i * (b - a) / n, d);
+    }
+
+    writeTable(n, m, v, a, b, c, d, 2);
+
+    while (!flag) {
+        eps_max = 0;
+        for (j = 1; j < m; j++)
+            for (i = 1; i < n; i++) {
+                v_old = v[i][j];
+                v_new = -w * (h2 * (v[i + 1][j] + v[i - 1][j]) + k2 * (v[i][j + 1] + v[i][j - 1]));
+                double p = a + i * (b - a) / n;
+                double e = c + j * (d - c) / m;
+                double func_t = func(p, e);
+                v_new = v_new + (1 - w) * a2 * v[i][j] + w * func_t;
+                v_new = v_new / a2;
+                eps_cur = fabs(v_old - v_new);
+                if (eps_cur > eps_max) { eps_max = eps_cur; };
+                v[i][j] = v_new;
+            }
+        if (S < 2) {
+            writeTable(n, m, v, a, b, c, d, S * 2 + 4);
+        }
+        S = S + 1;
+        if ((eps_max < eps) || (S >= Nmax)) { flag = true; }
+    }
+}
+
+
+struct func {
+    double operator()(double x, double y) {
+        return abs(x * x - 2 * y);
+    }
+
+    void operator()() {
+        system("python show_plot.py");
+    }
 };
