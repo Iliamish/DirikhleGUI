@@ -346,6 +346,15 @@ namespace DirikhleGUI {
 		int i, j; //индексы
 		double v_old; // старое значение преобразуемой компоненты вектора v
 		double v_new; // новое значение преобразуемой компоненты вектора v
+		TResults result;
+		result.res_vec = { {0,0},{0,0},{0,0},{0,0} };
+		std::vector<double> longDiag = {1,0.6,1.2,1};
+		std::vector<double> shortUP = {0,0.2,0.4};
+		std::vector<double> shortDown = {0.1,0.2,0};
+		std::vector<double> answer = {0,0.9258,2.0154,0};
+		tridiagonalMatrixAlg(longDiag, shortUP, shortDown, answer, result);
+
+
 		if (radioButton1->Checked) {
 			if (listBox1->SelectedItem->ToString()=="—опр€женные градиенты (RECT)") {
 				solveTest(v_2, funcTest, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);

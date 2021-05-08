@@ -13,8 +13,82 @@
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
+#include <functional>
+
 
 const double eps = std::numeric_limits<double>::epsilon();
+
+
+double testFunc(double x) {
+    return x <= 0 ? x * x * x + 3 * x * x : -x * x * x + 3 * x * x;
+}
+struct TResults {
+    std::vector<std::pair<double, double> > res_vec;
+    std::vector<double> local_mistake_vec;
+    std::vector<double> h_vec;
+    uint64_t ND = 0;
+    uint64_t NH = 0;
+    //double max_local_mistake;
+};
+
+void straightRun(const  std::vector <double>& longDiag, const  std::vector <double>& shortDiagUp, const  std::vector <double>& shortDiagDown, const  std::vector<double>& answer, std::vector<double>& alphas, std::vector <double>& betas) {
+    alphas.push_back(-shortDiagUp.at(0) / longDiag.at(0));
+    betas.push_back(answer.at(0) / longDiag.at(0));
+    for (size_t i = 1; i < longDiag.size() - 1; i++) {
+        alphas.push_back(-shortDiagUp.at(i) / (longDiag.at(i) + shortDiagDown.at(i - 1) * alphas.at(i - 1)));
+        betas.push_back((answer.at(i) - shortDiagDown.at(i - 1) * betas.at(i - 1)) / (longDiag.at(i) + shortDiagDown.at(i - 1) * alphas.at(i - 1)));
+    }
+    betas.push_back((answer.back() - shortDiagDown.back() * betas.back()) / (longDiag.back() + shortDiagDown.back() * alphas.back()));
+    alphas.push_back(double(0));
+}
+void backRun(double an, double cn, double answern, const  std::vector <double>& alphas, const  std::vector <double>& betas, TResults& res) {
+    res.res_vec[res.res_vec.size() - 1].second = betas.back();
+    size_t sz = alphas.size();
+    for (size_t i = 1; i < sz; i++) {
+        res.res_vec[res.res_vec.size() - 1 - i].second = alphas.at(sz - i - 1) * res.res_vec[res.res_vec.size() - i].second + betas.at(sz - i - 1);
+    }
+}
+void  tridiagonalMatrixAlg(const  std::vector <double>& longDiag, const  std::vector <double>& shortDiagUp, const  std::vector <double>& shortDiagDown, const  std::vector <double>& answer, TResults& res) {
+    if (shortDiagUp.size() != shortDiagDown.size() || longDiag.size() == shortDiagDown.size()) {
+        throw 1;
+    }
+    else {
+        std::vector <double> alphas;
+        std::vector <double> betas;
+        straightRun(longDiag, shortDiagUp, shortDiagDown, answer, alphas, betas); // Прямой ход 
+        std::vector<double> x;
+        backRun(shortDiagDown.back(), longDiag.back(), answer.back(), alphas, betas, res); // Обратный ход
+    }
+
+}
+
+TResults tfunc1(double start, double b, int n, double ksi, std::function<double(double)> f) {
+    TResults result;
+    double h = (b-start) / n;
+
+    std::vector<double> longDiag;
+    std::vector<double> shortUP;
+    std::vector<double> shortDown;
+    std::vector<double> answer;
+
+    answer.push_back(0);
+    longDiag.push_back(1);
+    shortUP.push_back(0);
+
+    for (int i = 0; i < n; i++) {
+        shortDown.push_back(h);
+        longDiag.push_back(4 * h);
+        shortUP.push_back(4);
+        answer.push_back(6 * ((f(start + (i + 2) * h) - f(start + (i + 1) * h) / h) - (f(start + (i + 1) * h) - f(start + i * h) / h)));
+    }
+
+    shortDown.push_back(0);
+    longDiag.push_back(1);
+    answer.push_back(0);
+    tridiagonalMatrixAlg(longDiag, shortUP, shortDown, answer, result);
+
+    return result;
+}
 
 std::string doubleToString(double num) {
 
