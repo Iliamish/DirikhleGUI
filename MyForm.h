@@ -427,12 +427,12 @@ namespace DirikhleGUI {
 	
 			dataGridView1->Rows->Add();
 			dataGridView1->Rows[i]->Cells[0]->Value = i+1;
-			dataGridView1->Rows[i]->Cells[1]->Value = equalsZero(result.res_vec[i].first);
-			dataGridView1->Rows[i]->Cells[2]->Value = equalsZero(result.res_vec[i + 1].first);
-			dataGridView1->Rows[i]->Cells[3]->Value = equalsZero(result.a[i]);
-			dataGridView1->Rows[i]->Cells[4]->Value = equalsZero(result.b[i]);
-			dataGridView1->Rows[i]->Cells[5]->Value = equalsZero(result.c[i]);
-			dataGridView1->Rows[i]->Cells[6]->Value = equalsZero (result.d[i]);
+			dataGridView1->Rows[i]->Cells[1]->Value =(result.res_vec[i].first);
+			dataGridView1->Rows[i]->Cells[2]->Value =(result.res_vec[i + 1].first);
+			dataGridView1->Rows[i]->Cells[3]->Value = (result.a[i]);
+			dataGridView1->Rows[i]->Cells[4]->Value = round(1000*result.b[i])/1000;
+			dataGridView1->Rows[i]->Cells[5]->Value = round(1000*result.c[i+1])/1000;
+			dataGridView1->Rows[i]->Cells[6]->Value = round (1000*result.d[i])/1000;
 		}
 		
 	}
