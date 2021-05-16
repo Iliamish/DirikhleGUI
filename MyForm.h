@@ -260,12 +260,36 @@ namespace DirikhleGUI {
 
 		int n= Convert::ToDouble(textBox1->Text); // максимальное число итераций (не менее 1)
 		int N = Convert::ToDouble(textBox2->Text);
+		double f_x_max = 1;
+		double f_max = 1;
+
+		double f1_x_max = 1;
+		double f1_max = 1;
+
+		double f2_x_max = 1;
+		double f2_max = 1;
 
 		int a = -1;
 		int b = 1;
 		TResults result= tfunc1(a, b, n, testFunc);
+		double h = double(b - a) / n;
+		std::vector<double> x;
 	
+		double f = 0;
+	
+		double f1 = 0;
+		double current_x = a;
+		double f2 = 0;
+		double h_n = double(a - b) / (N * n);
 		for (size_t i = 0; i < result.b.size(); i++) {
+			x.push_back(result.res_vec[i].first);
+			for (int j = 1; j < N; j++) {
+				current_x += h_n;
+				x.push_back(current_x);
+				f = result.a[i] + result.b[i] * (current_x - result.res_vec[i + 1].first) + (result.c[i + 1] / 2) * pow(current_x - result.res_vec[i + 1].first, 2) + (result.d[i] / 6) * pow(current_x - result.res_vec[i + 1].first, 3);
+			}
+			current_x += h_n;
+			x.push_back(result.res_vec[i + 1].first);
 
 			dataGridView1->Rows->Add();
 			dataGridView1->Rows[i]->Cells[0]->Value = i+1;
