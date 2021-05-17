@@ -22,6 +22,32 @@ const double eps = std::numeric_limits<double>::epsilon();
 double testFunc(double x) {
     return x <= 0 ? x * x * x + 3 * x * x : -x * x * x + 3 * x * x;
 }
+double testFuncDiv1(double x) {
+    return x <= 0 ? 3 * x * x + 6  * x : -3* x * x + 6  * x;
+}
+double testFuncDiv2(double x) {
+    return x <= 0 ? 6  * x + 6  : -6 * x + 6 ;
+}
+double mainFunc(double x) {
+    return sin(cos(x));
+}
+double mainFuncDiv1(double x) {
+    return -sin(x) * cos(cos(x));
+}
+double mainFuncDiv2(double x) {
+    return -sin(x)*sin(x)*sin(cos(x)) - cos(x)*cos(cos(x));
+}
+
+double mainFunc1(double x) {
+    return sin(cos(x)) + cos(10*x);
+}
+double mainFunc1Div1(double x) {
+    return -sin(x) * cos(cos(x)) - 10*sin(10*x);
+}
+double mainFunc1Div2(double x) {
+    return -sin(x)*sin(x)*sin(cos(x)) - cos(x)*cos(cos(x)) - 100*cos(10*x);
+}
+
 struct TResults {
     std::vector<std::pair<double, double> > res_vec;
     std::vector<double> local_mistake_vec;
