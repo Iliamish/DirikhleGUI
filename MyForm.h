@@ -879,6 +879,10 @@ namespace DirikhleGUI {
 		LineItem Curve8 = panel5->AddCurve("|F'(x) - S'(x)|", dif1, Color::Blue, SymbolType::None);
 		LineItem Curve9 = panel6->AddCurve("|F''(x)- S''(x)|", dif2, Color::Blue, SymbolType::None);
 
+		panel4->YAxis->Scale->Max = f_max;
+		panel5->YAxis->Scale->Max = f1_max;
+		panel6->YAxis->Scale->Max= f2_max;
+
 		zedGraphControl1->AxisChange();
 		// Обновляем график
 		zedGraphControl1->Invalidate();
