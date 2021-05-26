@@ -116,7 +116,7 @@ namespace DirikhleGUI {
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(100, 20);
 			this->textBox1->TabIndex = 1;
-			this->textBox1->Text = L"10";
+			this->textBox1->Text = L"8";
 			// 
 			// label2
 			// 
@@ -133,7 +133,7 @@ namespace DirikhleGUI {
 			this->textBox2->Name = L"textBox2";
 			this->textBox2->Size = System::Drawing::Size(100, 20);
 			this->textBox2->TabIndex = 1;
-			this->textBox2->Text = L"10";
+			this->textBox2->Text = L"8";
 			// 
 			// label3
 			// 
@@ -167,7 +167,7 @@ namespace DirikhleGUI {
 			this->textBox4->Name = L"textBox4";
 			this->textBox4->Size = System::Drawing::Size(100, 20);
 			this->textBox4->TabIndex = 1;
-			this->textBox4->Text = L"1e-8";
+			this->textBox4->Text = L"5e-7";
 			// 
 			// pictureBox1
 			// 
@@ -198,6 +198,9 @@ namespace DirikhleGUI {
 			// 
 			// dataGridView1
 			// 
+			this->dataGridView1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Location = System::Drawing::Point(326, 12);
 			this->dataGridView1->Name = L"dataGridView1";
@@ -318,48 +321,42 @@ namespace DirikhleGUI {
 		double v_old; // старое значение преобразуемой компоненты вектора v
 		double v_new; // новое значение преобразуемой компоненты вектора v
 
-		solve(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		//solve(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 		S_2 = S;
 		S = 0;
 		eps_max_2 = eps_max;
 		eps_max = 0;
 		eps_cur = 0;
 		error_max = 0;
-		auto max_diff = solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+		auto res1 = solve(v, my_func, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 
 
-		for (j = 1; j < m; j++)
-			for (i = 1; i < n; i++) {
+		for (j = 1; j < m; ++j)
+			for (i = 1; i < n; ++i) {
 				if (is_inside(i, j, n, m)) {
-					double k_1 = h2 * (v[i + 1][j] * ((i + 1 == n) ? 0 : 1)
-						+ v[i - 1][j] * ((i - 1 == 0) ? 0 : 1));
-					double k_2 = k2 * (v[i][j + 1] * ((j + 1 == m) ? 0 : 1)
-						+ v[i][j - 1] * ((j - 1 == 0) ? 0 : 1));
+					double k_1 = h2 * (v[i + 1][j] * (is_border(i + 1 ,j, n, m) ? 0 : 1)
+						+ v[i - 1][j] * (is_border(i - 1, j, n, m) ? 0 : 1));
+					double k_2 = k2 * (v[i][j + 1] * (is_border(i, j+1, n, m) ? 0 : 1)
+						+ v[i][j - 1] * (is_border(i, j - 1, n, m) ? 0 : 1));
 					double k_3 = v[i][j] * a2;
 					v_new = (k_3 + k_1 + k_2);
 					double p = a + i * (b - a) / n;
 					double e = c + j * (d - c) / m;
 					double func_t = my_func(p, e);
-					double f_t = -(h2 * (v[i + 1][j] * ((i + 1 == n) ? 1 : 0)
-						+ v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
-						k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
-							+ v[i][j - 1] * ((j - 1 == 0) ? 1 : 0))) + func_t;
+					double f_t = -(h2 * (v[i + 1][j] * (is_border(i + 1, j, n, m) ? 1 : 0)
+						+ v[i - 1][j] * (is_border(i - 1, j, n, m) ? 1 : 0)) +
+						k2 * (v[i][j + 1] * (is_border(i, j + 1, n, m) ? 1 : 0)
+							+ v[i][j - 1] * (is_border(i, j - 1, n, m) ? 1 : 0))) + func_t;
 					r[(j - 1) * (n - 1) + (i - 1)] = v_new - f_t;
 				}
 			}
 
-		double r_norm = 0;
-		for (j = 0; j < r.size(); j++)
+		double r_norm = fabs(r[0]);
+		for (j = 0; j < r.size(); ++j)
 			if(fabs(r[j])>r_norm)
 				r_norm = fabs(r[j]);
 		std::ofstream outfile("test.dat");
 
-		for (j = 1; j < m; j++)
-			for (i = 1; i < n; i++) {
-				if (abs(v[i][j] - v_2[2*i][2*j]) > accuracy) {
-					accuracy = abs(v[i][j] - v_2[2*i][2*j]);
-				}
-			}
 
 		for (i = 0; i < n + 1; i++)
 			for (j = 0; j < m + 1; j++) {
@@ -373,7 +370,7 @@ namespace DirikhleGUI {
 
 		String^ text = gcnew String(results.c_str());
 
-		label7->Text = text+L"\nmax_diff="+(max_diff);
+		label7->Text = text+L"\n\nМаксимальное отклонение от точного решения: \n"+(res1.max_diff)+L"\n\nВ узле: x = "+(res1.x)+ "    y = "+res1.y;
 
 		Process^ myProcess = gcnew Process();
 		myProcess->StartInfo->FileName = "python";
