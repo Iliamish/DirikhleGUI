@@ -57,7 +57,7 @@ std::string writeFinalTable(int n, int m, std::vector<std::vector<double>> v, do
         }
     }
     outfile << "\nТаблица № " << 7 << "\n\n" << std::endl;
-    std::string returned_string = std::string("Параметр W: ") + doubleToString(w) + "\n\nЧисло шагов: " + doubleToString(S) + "\n\nЧисло шагов с двойным шагом: " + doubleToString(S_2) + "\n\nТочность метода: " +
+    std::string returned_string = "\nЧисло шагов: " + doubleToString(S) + "\n\nЧисло шагов с двойным шагом: " + doubleToString(S_2) + "\n\nТочность метода: " +
         doubleToString(eps) + "\n\nДостигнутая точность: " + doubleToString(eps_max) + "\n\nДостигнутая точность с двойным шагом: " + doubleToString(eps_max_2) + "\n\nНорма невязки: " + doubleToString(r_norm) + "\n\nТочность max |v - v_2|: " + doubleToString(accuracy);
     
     //outfile << std::endl << "параметр w: " << w << std::endl;
@@ -296,7 +296,7 @@ double w_optimal(double a, double b, double c, double d, double h1, double h2) {
 
 
 template <typename Function>
-void solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+std::vector<std::vector<double>> solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
     int i, j; //индексы
     double a2, k2, h2;
 
@@ -383,14 +383,21 @@ void solve(std::vector<std::vector<double>>& v, Function func, const int n, cons
         }
         S += 1;
         if (eps_max <= eps || S >= Nmax) {
+            for (int i = 1; i < n; i++) {
+                for (int j = 1; j < m; j++) {
+                    r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                }
+            }
             flag = true;
+            return r;
         }
 
     }
+
 }
 
 template <typename Function>
-void solveTest(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+std::vector<std::vector<double>> solveTest(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
     int i, j; //индексы
     double a2, k2, h2;
 
@@ -476,15 +483,22 @@ void solveTest(std::vector<std::vector<double>>& v, Function func, const int n, 
         }
         S += 1;
         if (eps_max <= eps || S >= Nmax) {
+            for (int i = 1; i < n; i++) {
+                for (int j = 1; j < m; j++) {
+                    r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                }
+            }
             flag = true;
+            return r;
         }
 
     }
+
 }
 
 
 template <typename Function>
-void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+std::vector<std::vector<double>> solveCut(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
     int i, j; //индексы
     double a2, k2, h2;
 
@@ -620,35 +634,35 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
         // 1
         for (int i = 1; i <= n / 4; i++) {
             for (int j = 1; j < 3 * m / 4; j++) {  
-                check[i][j] += 1;
+
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //2
         for (int i = n / 4 + 1; i < n / 2; i++) {
             for (int j = 1; j < m; j++) { 
-                check[i][j] += 2;
+
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //3
         for (int i = n / 2; i <= 3 * n / 4; i++) {
             for (int j = 3 * m / 4 + 1; j < m; j++) {     
-                check[i][j] += 3;
+         
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //4
         for (int i = 3 * n / 4+1; i < n ; i++) {
             for (int j = 1; j < m; j++) {   
-                check[i][j] += 4;
+   
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
         //5
         for (int i = n / 2; i <= 3 * n / 4; i++) {
             for (int j = 1; j < m / 4; j++) {
-                check[i][j] += 5;
+   
                 r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
             }
         }
@@ -715,11 +729,47 @@ void solveCut(std::vector<std::vector<double>>& v, Function func, const int n, c
         }
      
         S += 1;
-        if (S >= Nmax) {
-            flag = true;
-        }
+        if (S >= Nmax || eps_max<eps) {
+            // 1
+            for (int i = 1; i <= n / 4; i++) {
+                for (int j = 1; j < 3 * m / 4; j++) {
 
+                    r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                }
+            }
+            //2
+            for (int i = n / 4 + 1; i < n / 2; i++) {
+                for (int j = 1; j < m; j++) {
+
+                    r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                }
+            }
+            //3
+            for (int i = n / 2; i <= 3 * n / 4; i++) {
+                for (int j = 3 * m / 4 + 1; j < m; j++) {
+
+                    r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                }
+            }
+            //4
+            for (int i = 3 * n / 4 + 1; i < n; i++) {
+                for (int j = 1; j < m; j++) {
+
+                    r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                }
+            }
+            //5
+            for (int i = n / 2; i <= 3 * n / 4; i++) {
+                for (int j = 1; j < m / 4; j++) {
+
+                    r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                }
+            }
+            flag = true;
+            return r;
+        }
     }
+
 }
 
 /*template <typename Function>
@@ -904,6 +954,36 @@ auto funcTest = [](double x, double y) {
 auto funcDef = [](double x, double y) {
     return abs(x * x - 2 * y);
 };
+
+double U(double x, double y) {
+    return exp(sin(x * y * M_PI) * sin(x * y * M_PI));
+}
+void fillU(std::vector<std::vector<double>>& v, int a, int b,int c,int d,int n,int m) {
+    double h = double(b - a) / n;
+    double k= double(d - c) / m;
+    for (int i = 0; i <= n; i++) {
+        for (int j = 0; j <=m; j++) {
+            v[i][j] = U(double(a) + i * h, double(c) + j * k);
+        }
+    }
+}
+
+void fill_u_test(std::vector<std::vector<double>>& v, int a, int b, int c, int d, int n, int m) {
+    double h = double(b - a) / n;
+    double k = double(d - c) / m;
+    int i, j;
+
+    for (int i = 0; i <= n; i++) {
+        for (int j = 0; j <= m; j++) {
+            if (!((j > 3*m / 4  && i < n / 4) || (i > n / 2 && i< 3*n / 4  && j>m / 4 && j < 3*m / 4 ))) {
+                v[i][j] = U(a + i * h, c + j * k);
+            }
+        }
+    }
+  
+}
+
+
 
 template <typename Function>
 void solveMVR(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {

@@ -50,8 +50,8 @@ namespace DirikhleGUI {
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::TextBox^ textBox4;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
-	private: System::Windows::Forms::Label^ label5;
-	private: System::Windows::Forms::TextBox^ textBox5;
+
+
 	private: System::Windows::Forms::DataGridView^ dataGridView1;
 	private: System::Windows::Forms::Button^ button1;
 	private: System::ComponentModel::IContainer^ components;
@@ -61,6 +61,12 @@ namespace DirikhleGUI {
 	private: System::Windows::Forms::ListBox^ listBox1;
 	private: System::Windows::Forms::RadioButton^ radioButton1;
 	private: System::Windows::Forms::RadioButton^ radioButton2;
+	private: System::Windows::Forms::TabControl^ tabControl1;
+	private: System::Windows::Forms::TabPage^ tabPage1;
+	private: System::Windows::Forms::TabPage^ tabPage2;
+	private: System::Windows::Forms::DataGridView^ dataGridView2;
+	private: System::Windows::Forms::TabPage^ tabPage3;
+	private: System::Windows::Forms::DataGridView^ dataGridView3;
 
 	private: Thread^ thread2 = nullptr;
 
@@ -87,8 +93,6 @@ namespace DirikhleGUI {
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
-			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
 			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label6 = (gcnew System::Windows::Forms::Label());
@@ -96,8 +100,20 @@ namespace DirikhleGUI {
 			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
 			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton2 = (gcnew System::Windows::Forms::RadioButton());
+			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
+			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
+			this->dataGridView2 = (gcnew System::Windows::Forms::DataGridView());
+			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
+			this->dataGridView3 = (gcnew System::Windows::Forms::DataGridView());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			this->tabControl1->SuspendLayout();
+			this->tabPage1->SuspendLayout();
+			this->tabPage2->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView2))->BeginInit();
+			this->tabPage3->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView3))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// label1
@@ -178,29 +194,12 @@ namespace DirikhleGUI {
 			this->pictureBox1->TabStop = false;
 			this->pictureBox1->Click += gcnew System::EventHandler(this, &MyForm::pictureBox1_Click);
 			// 
-			// label5
-			// 
-			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(12, 272);
-			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(69, 13);
-			this->label5->TabIndex = 0;
-			this->label5->Text = L"Параметр w";
-			// 
-			// textBox5
-			// 
-			this->textBox5->Location = System::Drawing::Point(150, 269);
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(100, 20);
-			this->textBox5->TabIndex = 1;
-			this->textBox5->Text = L"1.5278640450004206";
-			// 
 			// dataGridView1
 			// 
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Location = System::Drawing::Point(326, 24);
+			this->dataGridView1->Location = System::Drawing::Point(-4, -4);
 			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->Size = System::Drawing::Size(1212, 620);
+			this->dataGridView1->Size = System::Drawing::Size(1212, 601);
 			this->dataGridView1->TabIndex = 3;
 			// 
 			// button1
@@ -266,23 +265,81 @@ namespace DirikhleGUI {
 			this->radioButton2->UseVisualStyleBackColor = true;
 			this->radioButton2->CheckedChanged += gcnew System::EventHandler(this, &MyForm::radioButton2_CheckedChanged);
 			// 
+			// tabControl1
+			// 
+			this->tabControl1->Controls->Add(this->tabPage1);
+			this->tabControl1->Controls->Add(this->tabPage2);
+			this->tabControl1->Controls->Add(this->tabPage3);
+			this->tabControl1->Location = System::Drawing::Point(326, 13);
+			this->tabControl1->Name = L"tabControl1";
+			this->tabControl1->SelectedIndex = 0;
+			this->tabControl1->Size = System::Drawing::Size(1202, 623);
+			this->tabControl1->TabIndex = 11;
+			// 
+			// tabPage1
+			// 
+			this->tabPage1->Controls->Add(this->dataGridView1);
+			this->tabPage1->Location = System::Drawing::Point(4, 22);
+			this->tabPage1->Name = L"tabPage1";
+			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage1->Size = System::Drawing::Size(1194, 597);
+			this->tabPage1->TabIndex = 0;
+			this->tabPage1->Text = L"V(x,y)";
+			this->tabPage1->UseVisualStyleBackColor = true;
+			// 
+			// tabPage2
+			// 
+			this->tabPage2->Controls->Add(this->dataGridView2);
+			this->tabPage2->Location = System::Drawing::Point(4, 22);
+			this->tabPage2->Name = L"tabPage2";
+			this->tabPage2->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage2->Size = System::Drawing::Size(1194, 597);
+			this->tabPage2->TabIndex = 1;
+			this->tabPage2->Text = L"U(x,y)";
+			this->tabPage2->UseVisualStyleBackColor = true;
+			// 
+			// dataGridView2
+			// 
+			this->dataGridView2->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView2->Location = System::Drawing::Point(-4, -4);
+			this->dataGridView2->Name = L"dataGridView2";
+			this->dataGridView2->Size = System::Drawing::Size(1212, 601);
+			this->dataGridView2->TabIndex = 4;
+			// 
+			// tabPage3
+			// 
+			this->tabPage3->Controls->Add(this->dataGridView3);
+			this->tabPage3->Location = System::Drawing::Point(4, 22);
+			this->tabPage3->Name = L"tabPage3";
+			this->tabPage3->Padding = System::Windows::Forms::Padding(3);
+			this->tabPage3->Size = System::Drawing::Size(1194, 597);
+			this->tabPage3->TabIndex = 2;
+			this->tabPage3->Text = L"U(x,y) - V(x,y)";
+			this->tabPage3->UseVisualStyleBackColor = true;
+			// 
+			// dataGridView3
+			// 
+			this->dataGridView3->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView3->Location = System::Drawing::Point(-4, -4);
+			this->dataGridView3->Name = L"dataGridView3";
+			this->dataGridView3->Size = System::Drawing::Size(1212, 601);
+			this->dataGridView3->TabIndex = 5;
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1540, 648);
+			this->Controls->Add(this->tabControl1);
 			this->Controls->Add(this->radioButton2);
 			this->Controls->Add(this->radioButton1);
 			this->Controls->Add(this->listBox1);
 			this->Controls->Add(this->label7);
 			this->Controls->Add(this->label6);
 			this->Controls->Add(this->button1);
-			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->pictureBox1);
 			this->Controls->Add(this->textBox4);
 			this->Controls->Add(this->label4);
-			this->Controls->Add(this->textBox5);
-			this->Controls->Add(this->label5);
 			this->Controls->Add(this->textBox3);
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->textBox2);
@@ -293,6 +350,12 @@ namespace DirikhleGUI {
 			this->Text = L"MyForm";
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			this->tabControl1->ResumeLayout(false);
+			this->tabPage1->ResumeLayout(false);
+			this->tabPage2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView2))->EndInit();
+			this->tabPage3->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView3))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -328,14 +391,13 @@ namespace DirikhleGUI {
 		const int m = Convert::ToDouble(textBox2->Text); //размерность сетки
 		writeHeader(n, m);
 		std::vector<std::vector<double> >  v(n+1, std::vector<double>(m+1));
+		std::vector<std::vector<double> >  u(n + 1, std::vector<double>(m + 1));
 		//std::vector<std::vector<double>> v(n + 1); // искомый вектор v
 		std::vector<std::vector<double> >  v_2(2*n + 1, std::vector<double>(2*m + 1)); // искомый вектор v с половинным шагом
-		std::vector<double> r((n - 1) * (m - 1)); // невязка
+		std::vector<std::vector<double> >  r(n + 1, std::vector<double>(m + 1)); // невязка
 		double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
 		double w = 1.5278640450004206;
-		if (textBox5->Text != "1.5278640450004206") {
-			w = std::stod(msclr::interop::marshal_as<std::string>(textBox5->Text));
-		}
+	
 		func my_func;
 		//double w = w_optimal(a, b, c, d, (b - a) / n, (d - c) / m);
 		h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
@@ -347,83 +409,76 @@ namespace DirikhleGUI {
 		double v_old; // старое значение преобразуемой компоненты вектора v
 		double v_new; // новое значение преобразуемой компоненты вектора v
 		if (radioButton1->Checked) {
-			if (listBox1->SelectedItem->ToString()=="Сопряженные градиенты (RECT)") {
-				solveTest(v_2, funcTest, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-			} else {
+			if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
+				fillU(u, a, b, c, d, n, m);
+			}  else {
 				if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (CUT)")
 				{
-					solveCut(v_2, funcTest, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+					fill_u_test(u, a, b, c, d, n, m);
 				}
-			}
+		} 
 		}
 		else {
-			if (listBox1->SelectedItem->ToString() == "Метод Верхней Релаксации") {
-				solveMVR(v_2, my_func, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
+				r =solve(v, funcDef, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 			}
-			else if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
-				solve(v_2, funcDef, 2 * n, 2 * m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-			}
-		
 		}
+
 	
-		S_2 = S;
-		S = 0;
+		S_2 = 0;
 		eps_max_2 = eps_max;
 		eps_max = 0;
 		eps_cur = 0;
 		error_max = 0;
 
+
 		if (radioButton1->Checked) {
 			if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
-				solveTest(v, funcTest, n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+				r = solveTest(v, funcTest, n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 			}
 			else {
 				if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (CUT)")
 				{
-					solveCut(v, funcTest,  n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+					r = solveCut(v, funcTest, n, m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
 				}
 			}
 		}
 		else {
-			if (listBox1->SelectedItem->ToString() == "Метод Верхней Релаксации") {
-				solveMVR(v, my_func,  n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
-			}
-			else if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
-				solve(v, funcDef,  n,  m, a, b, c, d, Nmax, S, eps, eps_max, error_max);
+			 if (listBox1->SelectedItem->ToString() == "Сопряженные градиенты (RECT)") {
+				solve(v_2, funcDef,  2*n, 2* m, a, b, c, d, Nmax, S_2, eps, eps_max, error_max);
 			}
 		}
-		for (j = 1; j < m; j++)
-			for (i = 1; i < n; i++) {
-				double k_1 = h2 * (v[i + 1][j] * ((i + 1 == n) ? 0 : 1)
-					+ v[i - 1][j] * ((i - 1 == 0) ? 0 : 1));
-				double k_2 = k2 * (v[i][j + 1] * ((j + 1 == m) ? 0 : 1)
-					+ v[i][j - 1] * ((j - 1 == 0) ? 0 : 1));
-				double k_3 = v[i][j] * a2;
-				v_new = (k_3 + k_1 + k_2);
-				double p = a + i * (b - a) / n;
-				double e = c + j * (d - c) / m;
-				double func_t = my_func(p, e);
-				double f_t = -(h2 * (v[i + 1][j] * ((i + 1 == n) ? 1 : 0)
-					+ v[i - 1][j] * ((i - 1 == 0) ? 1 : 0)) +
-					k2 * (v[i][j + 1] * ((j + 1 == m) ? 1 : 0)
-						+ v[i][j - 1] * ((j - 1 == 0) ? 1 : 0))) + func_t;
-				r[(j - 1) * (n - 1) + (i - 1)] = v_new - f_t;
-			}
+
 
 		
-			
 		double r_norm = 0;
-		for (j = 0; j < r.size(); j++)
-			r_norm += r[j] * r[j];
-		r_norm = sqrt(r_norm);
-		std::ofstream outfile("test.dat");
-
-		for (j = 1; j < m; j++)
-			for (i = 1; i < n; i++) {
-				if (abs(v[i][j] - v_2[i][j]) < accuracy) {
-					accuracy = abs(v[i][j] - v_2[i][j]);
-				}
+		for (int i = 0; i < n + 1; i++) {
+			for (int j = 0; j < m + 1; j++) {
+				if (abs(r[i][j]) > r_norm)
+					r_norm = abs(r[i][j]);
 			}
+		}
+
+
+		std::ofstream outfile("test.dat");
+		accuracy = 0;
+		if (radioButton2->Checked) {
+			for (j = 1; j < m; j++)
+				for (i = 1; i < n; i++) {
+					if (abs(v[i][j] - v_2[2 * i][2 * j]) > accuracy) {
+						accuracy = abs(v[i][j] - v_2[2*i][2*j]);
+					}
+				}
+		}
+		else {
+			for (j = 1; j < m; j++)
+				for (i = 1; i < n; i++) {
+					if (abs(v[i][j] - u[i][j]) > accuracy) {
+						accuracy = abs(v[i][j] - u[i][j]);
+					}
+				}
+		}
+		
 
 		for (i = 0; i < n + 1; i++)
 			for (j = 0; j < m + 1; j++) {
@@ -450,21 +505,94 @@ namespace DirikhleGUI {
 		dataGridView1->ColumnCount = n+1;
 		dataGridView1->RowHeadersWidth = 100;
 		dataGridView1->TopLeftHeaderCell->Value = "       Y\\X       ";
-		for (int r = m; r >=0; r--) {
 
-			DataGridViewRow^ row = gcnew DataGridViewRow();
-			row->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
-			//row->CreateCells(this->dataGridView1);
+		dataGridView2->Rows->Clear();
+		dataGridView2->ColumnCount = n + 1;
+		dataGridView2->RowHeadersWidth = 100;
+		dataGridView2->TopLeftHeaderCell->Value = "       Y\\X       ";
 
-			for (int c = 0; c < n+1; c++) {
-				DataGridViewCell^ cel = gcnew DataGridViewTextBoxCell();
-				cel->Value = setPresision(v[c][r], 3);
-				row->Cells->Add(cel);
-				dataGridView1->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
+		dataGridView3->Rows->Clear();
+		dataGridView3->ColumnCount = n + 1;
+		dataGridView3->RowHeadersWidth = 100;
+		dataGridView3->TopLeftHeaderCell->Value = "       Y\\X       ";
+
+
+		if (radioButton1->Checked) {
+			for (int r = m; r >= 0; r--) {
+				DataGridViewRow^ row1 = gcnew DataGridViewRow();
+				row1->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
+
+				DataGridViewRow^ row2 = gcnew DataGridViewRow();
+				row2->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
+
+				DataGridViewRow^ row3 = gcnew DataGridViewRow();
+				row3->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
+
+				for (int c = 0; c < n + 1; c++) {
+					DataGridViewCell^ cel1 = gcnew DataGridViewTextBoxCell();
+					DataGridViewCell^ cel2 = gcnew DataGridViewTextBoxCell();
+					DataGridViewCell^ cel3 = gcnew DataGridViewTextBoxCell();
+					cel1->Value = setPresision(v[c][r], 3);
+					row1->Cells->Add(cel1);
+
+					cel2->Value = setPresision(u[c][r], 3);
+					row2->Cells->Add(cel2);
+
+					cel3->Value = setPresision(u[c][r] - v[c][r], 3);
+					row3->Cells->Add(cel3);
+
+					dataGridView1->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
+					dataGridView2->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
+					dataGridView3->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
+				}
+
+				this->dataGridView1->Rows->Add(row1);
+				this->dataGridView2->Rows->Add(row2);
+				this->dataGridView3->Rows->Add(row3);
+			}
+		}
+		else {
+			dataGridView2->ColumnCount = 2*n + 1;
+			for (int r = m; r >= 0; r--) {
+				DataGridViewRow^ row1 = gcnew DataGridViewRow();
+				row1->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
+
+				DataGridViewRow^ row3 = gcnew DataGridViewRow();
+				row3->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
+
+				for (int c = 0; c < n + 1; c++) {
+					DataGridViewCell^ cel1 = gcnew DataGridViewTextBoxCell();
+					DataGridViewCell^ cel3 = gcnew DataGridViewTextBoxCell();
+					cel1->Value = setPresision(v[c][r], 3);
+					row1->Cells->Add(cel1);
+
+
+					cel3->Value = setPresision(v_2[2*c][2*r] - v[c][r], 3);
+					row3->Cells->Add(cel3);
+
+					dataGridView1->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
+					dataGridView3->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / n).c_str());
+				}
+
+				this->dataGridView1->Rows->Add(row1);
+				this->dataGridView3->Rows->Add(row3);
 			}
 
-			this->dataGridView1->Rows->Add(row);
+			for (int r = 2 * m; r >= 0; r--) {
+				DataGridViewRow^ row2 = gcnew DataGridViewRow();
+				row2->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / (2*m)).c_str());
+				for (int c = 0; c < 2*n + 1; c++) {
+					DataGridViewCell^ cel2 = gcnew DataGridViewTextBoxCell();
+					cel2->Value = setPresision(v_2[c][r], 3);
+					row2->Cells->Add(cel2);
+					dataGridView2->Columns[c]->Name = gcnew String(std::to_string(a + c * (b - a) / (2*n)).c_str());
+				}
+				this->dataGridView2->Rows->Add(row2);
+			}
+			
 		}
+	
+
 	}
 private: System::Void checkBox1_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
 }
