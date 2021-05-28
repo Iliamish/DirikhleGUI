@@ -29,9 +29,14 @@ double setPresision(double num, int presision) {
 
     return double(int(num)) / pow(10, presision + 1);
 }
+struct results {
+    double norm_euklid;
+    double norm_inf;
+    double start_norm_euklid;
+    double start_norm_inf;
+};
 
-
-std::string writeFinalTable(int n, int m, std::vector<std::vector<double>> v, double a, double b, double c, double d, int S, int S_2, double eps, double eps_max, double eps_max_2, double error_max, double r_norm, double w, double accuracy) {
+std::string writeFinalTable(int n, int m, std::vector<std::vector<double>> v, double a, double b, double c, double d, int S, int S_2, double eps, double eps_max, double eps_max_2, double error_max, double r_norm, double w, double accuracy,results res) {
     std::ofstream outfile("out.txt", std::ofstream::app);
     outfile << "Таблица № " << 1 << std::endl;
     for (size_t j = 0; j < m + 3; j++) {
@@ -57,8 +62,8 @@ std::string writeFinalTable(int n, int m, std::vector<std::vector<double>> v, do
         }
     }
     outfile << "\nТаблица № " << 7 << "\n\n" << std::endl;
-    std::string returned_string = "\nЧисло шагов: " + doubleToString(S) + "\n\nЧисло шагов с двойным шагом: " + doubleToString(S_2) + "\n\nТочность метода: " +
-        doubleToString(eps) + "\n\nДостигнутая точность: " + doubleToString(eps_max) + "\n\nДостигнутая точность с двойным шагом: " + doubleToString(eps_max_2) + "\n\nНорма невязки: " + doubleToString(r_norm) + "\n\nТочность max |v - v_2|: " + doubleToString(accuracy);
+    std::string returned_string = "Число шагов: " + doubleToString(S) + "\n\nЧисло шагов с двойным шагом: " + doubleToString(S_2) + "\n\nНорма на первом шаге(inf): " + doubleToString(res.start_norm_inf) + "\n\nНорма на первом шаге(2): " + doubleToString(res.start_norm_euklid) + "\n\nТочность метода: " +
+        doubleToString(eps) + "\n\nДостигнутая точность: " + doubleToString(eps_max) + "\n\nДостигнутая точность с двойным шагом: " + doubleToString(eps_max_2) + "\n\nНорма невязки (inf): " + doubleToString(res.norm_inf) + "\n\nНорма невязки (2): " + doubleToString(res.norm_euklid) + "\n\nТочность max |v - v_2|: " + doubleToString(accuracy);
     
     //outfile << std::endl << "параметр w: " << w << std::endl;
     //outfile << std::endl << "число шагов: " << S << std::endl;
@@ -296,10 +301,10 @@ double w_optimal(double a, double b, double c, double d, double h1, double h2) {
 
 
 template <typename Function>
-std::vector<std::vector<double>> solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+results solve(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
     int i, j; //индексы
     double a2, k2, h2;
-
+    results res;
     h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
     k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
     a2 = -2 * (h2 + k2);
@@ -334,12 +339,18 @@ std::vector<std::vector<double>> solve(std::vector<std::vector<double>>& v, Func
     }
 
 
-
+    res.start_norm_euklid = 0;
+    res.start_norm_inf = 0;
     for (int i = 1; i < n; i++) {
         for (int j = 1; j < m; j++) {
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b-a)/n, c + j * (d-c)/m));
+            if (abs(h[i][j]) > res.start_norm_inf)
+                res.start_norm_inf = abs(h[i][j]);
+            res.start_norm_euklid += h[i][j] * h[i][j];
+
         }
     }
+    res.start_norm_euklid = sqrt(res.start_norm_euklid);
 
     double alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
     for (int i = 0; i < n + 1; i++) {
@@ -383,24 +394,31 @@ std::vector<std::vector<double>> solve(std::vector<std::vector<double>>& v, Func
         }
         S += 1;
         if (eps_max <= eps || S >= Nmax) {
+            double norm_euklid = 0;
+            double norm_inf = 0;
             for (int i = 1; i < n; i++) {
                 for (int j = 1; j < m; j++) {
                     r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                    if (abs(r[i][j]) > norm_inf) {
+                        norm_inf = abs(r[i][j]);
+                    }
+                    norm_euklid += r[i][j] * r[i][j];
                 }
             }
+            norm_euklid = sqrt(norm_euklid);
+            res.norm_euklid = norm_euklid;
+            res.norm_inf = norm_inf;
             flag = true;
-            return r;
+            return res;
         }
-
     }
-
 }
 
 template <typename Function>
-std::vector<std::vector<double>> solveTest(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+results solveTest(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
     int i, j; //индексы
     double a2, k2, h2;
-
+    results res;
     h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
     k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
     a2 = -2 * (h2 + k2);
@@ -434,13 +452,17 @@ std::vector<std::vector<double>> solveTest(std::vector<std::vector<double>>& v, 
         v[i][m] = m4(a + i * (b - a) / n, d);
     }
  
-
+    res.start_norm_euklid = 0;
+    res.start_norm_inf = 0;
     for (int i = 1; i < n; i++) {
         for (int j = 1; j < m; j++) {
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+            if (abs(h[i][j]) > res.start_norm_inf)
+                res.start_norm_inf = abs(h[i][j]);
+            res.start_norm_euklid += h[i][j] * h[i][j];
         }
     }
-
+    res.start_norm_euklid = sqrt(res.start_norm_euklid);
     double alpha = calculateAlpha(h2, k2, a2, v, h, func, n, m, (b - a) / n, (d - c) / m, a, c);
     for (int i = 0; i < n + 1; i++) {
         for (int j = 0; j < m + 1; j++) {
@@ -483,13 +505,22 @@ std::vector<std::vector<double>> solveTest(std::vector<std::vector<double>>& v, 
         }
         S += 1;
         if (eps_max <= eps || S >= Nmax) {
+            double norm_euklid = 0;
+            double norm_inf = 0;
             for (int i = 1; i < n; i++) {
                 for (int j = 1; j < m; j++) {
                     r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                    if (abs(r[i][j]) > norm_inf) {
+                        norm_inf = abs(r[i][j]);
+                    }
+                    norm_euklid += r[i][j] * r[i][j];
                 }
             }
+            norm_euklid = sqrt(norm_euklid);
+            res.norm_euklid = norm_euklid;
+            res.norm_inf = norm_inf;
             flag = true;
-            return r;
+            return res;
         }
 
     }
@@ -498,10 +529,10 @@ std::vector<std::vector<double>> solveTest(std::vector<std::vector<double>>& v, 
 
 
 template <typename Function>
-std::vector<std::vector<double>> solveCut(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
+results solveCut(std::vector<std::vector<double>>& v, Function func, const int n, const int m, double a, double b, double c, double d, int Nmax, int& S, double& eps, double& eps_max, double& error_max) {
     int i, j; //индексы
     double a2, k2, h2;
-
+    results res;
     h2 = -(double(n) / (b - a)) * (double(n) / (b - a));
     k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
     a2 = -2 * (h2 + k2);
@@ -552,38 +583,51 @@ std::vector<std::vector<double>> solveCut(std::vector<std::vector<double>>& v, F
     }
     std::vector<std::vector<double> >  check(n + 1, std::vector<double>(m + 1));
     // 1
+    res.start_norm_euklid = 0;
+    res.start_norm_inf = 0;
     for (int i = 1; i <= n/4; i++) {
         for (int j = 1; j < 3*m/4; j++) {
-            check[i][j] += 1;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+            if (abs(h[i][j]) > res.start_norm_inf)
+                res.start_norm_inf = abs(h[i][j]);
+            res.start_norm_euklid += h[i][j] * h[i][j];
         }
     }
     //2
     for (int i = n/4+1; i < n/2; i++) {
         for (int j = 1; j < m; j++) {
-            check[i][j] += 2;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+            if (abs(h[i][j]) > res.start_norm_inf)
+                res.start_norm_inf = abs(h[i][j]);
+            res.start_norm_euklid += h[i][j] * h[i][j];
         }
+
     }
     //3
     for (int i = n/2; i <= 3*n/4 ; i++) {
         for (int j = 3*m/4+1; j < m; j++) {
-            check[i][j] += 3;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+            if (abs(h[i][j]) > res.start_norm_inf)
+                res.start_norm_inf = abs(h[i][j]);
+            res.start_norm_euklid += h[i][j] * h[i][j];
         }
     }
     //4
     for (int i = 3*n/4+1; i < n ; i++) {
         for (int j = 1; j <  m ; j++) {          
-            check[i][j] += 4;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+            if (abs(h[i][j]) > res.start_norm_inf)
+                res.start_norm_inf = abs(h[i][j]);
+            res.start_norm_euklid += h[i][j] * h[i][j];
         }
     }
     //5
      for (int i = n/2; i <= 3*n/4; i++) {
         for (int j = 1; j < m/4; j++) { 
-            check[i][j] += 5;
             h[i][j] = -(a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+            if (abs(h[i][j]) > res.start_norm_inf)
+                res.start_norm_inf = abs(h[i][j]);
+            res.start_norm_euklid += h[i][j] * h[i][j];
         }
     }
 
@@ -592,35 +636,30 @@ std::vector<std::vector<double>> solveCut(std::vector<std::vector<double>>& v, F
     // 1
     for (int i = 1; i <= n / 4; i++) {
         for (int j = 1; j < 3 * m / 4; j++) {      
-            check[i][j] += 1;
             v[i][j] += alpha * h[i][j];
         }
     }
     //2
     for (int i = n / 4 + 1; i < n / 2; i++) {
         for (int j = 1; j < m; j++) {        
-            check[i][j] += 2;
             v[i][j] += alpha * h[i][j];
         }
     }
     //3
     for (int i = n / 2; i <= 3 * n / 4; i++) {
         for (int j = 3 * m / 4 + 1; j < m; j++) {        
-            check[i][j] += 3;
             v[i][j] += alpha * h[i][j];
         }
     }
     //4
     for (int i = 3 * n / 4+1; i < n ; i++) { 
         for (int j = 1; j < m; j++) {     
-            check[i][j] += 4;
             v[i][j] += alpha * h[i][j];
         }
     }
     //5
     for (int i = n / 2; i <= 3 * n / 4; i++) {
         for (int j = 1; j < m / 4; j++) {
-            check[i][j] += 5;
             v[i][j] += alpha * h[i][j];
         }
     }
@@ -730,11 +769,17 @@ std::vector<std::vector<double>> solveCut(std::vector<std::vector<double>>& v, F
      
         S += 1;
         if (S >= Nmax || eps_max<eps) {
+            double norm_euklid = 0;
+            double norm_inf = 0;
             // 1
             for (int i = 1; i <= n / 4; i++) {
                 for (int j = 1; j < 3 * m / 4; j++) {
 
                     r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                    if (abs(r[i][j]) > norm_inf) {
+                        norm_inf = abs(r[i][j]);
+                    }
+                    norm_euklid += r[i][j] * r[i][j];
                 }
             }
             //2
@@ -742,6 +787,10 @@ std::vector<std::vector<double>> solveCut(std::vector<std::vector<double>>& v, F
                 for (int j = 1; j < m; j++) {
 
                     r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                    if (abs(r[i][j]) > norm_inf) {
+                        norm_inf = abs(r[i][j]);
+                    }
+                    norm_euklid += r[i][j] * r[i][j];
                 }
             }
             //3
@@ -749,6 +798,10 @@ std::vector<std::vector<double>> solveCut(std::vector<std::vector<double>>& v, F
                 for (int j = 3 * m / 4 + 1; j < m; j++) {
 
                     r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                    if (abs(r[i][j]) > norm_inf) {
+                        norm_inf = abs(r[i][j]);
+                    }
+                    norm_euklid += r[i][j] * r[i][j];
                 }
             }
             //4
@@ -756,6 +809,10 @@ std::vector<std::vector<double>> solveCut(std::vector<std::vector<double>>& v, F
                 for (int j = 1; j < m; j++) {
 
                     r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                    if (abs(r[i][j]) > norm_inf) {
+                        norm_inf = abs(r[i][j]);
+                    }
+                    norm_euklid += r[i][j] * r[i][j];
                 }
             }
             //5
@@ -763,10 +820,17 @@ std::vector<std::vector<double>> solveCut(std::vector<std::vector<double>>& v, F
                 for (int j = 1; j < m / 4; j++) {
 
                     r[i][j] = (a2 * v[i][j] + h2 * v[i - 1][j] + h2 * v[i + 1][j] + k2 * v[i][j - 1] + k2 * v[i][j + 1] - func(a + i * (b - a) / n, c + j * (d - c) / m));
+                    if (abs(r[i][j]) > norm_inf) {
+                        norm_inf = abs(r[i][j]);
+                    }
+                    norm_euklid += r[i][j] * r[i][j];
                 }
             }
+            norm_euklid = sqrt(norm_euklid);
+            res.norm_euklid = norm_euklid;
+            res.norm_inf = norm_inf;
             flag = true;
-            return r;
+            return res;
         }
     }
 

@@ -393,8 +393,7 @@ namespace DirikhleGUI {
 		std::vector<std::vector<double> >  v(n+1, std::vector<double>(m+1));
 		std::vector<std::vector<double> >  u(n + 1, std::vector<double>(m + 1));
 		//std::vector<std::vector<double>> v(n + 1); // искомый вектор v
-		std::vector<std::vector<double> >  v_2(2*n + 1, std::vector<double>(2*m + 1)); // искомый вектор v с половинным шагом
-		std::vector<std::vector<double> >  r(n + 1, std::vector<double>(m + 1)); // невязка
+		std::vector<std::vector<double> >  v_2(2*n + 1, std::vector<double>(2*m + 1)); // искомый вектор v с половинным шаго
 		double a = 0, b = 2, c = 0, d = 1; // границы области определения уравнения
 		double w = 1.5278640450004206;
 	
@@ -404,7 +403,7 @@ namespace DirikhleGUI {
 		k2 = -(double(m) / (d - c)) * (double(m) / (d - c));
 		a2 = 2 * (h2 + k2);
 		bool flag = false;
-
+		results r;
 		int i, j; //индексы
 		double v_old; // старое значение преобразуемой компоненты вектора v
 		double v_new; // новое значение преобразуемой компоненты вектора v
@@ -451,13 +450,7 @@ namespace DirikhleGUI {
 
 
 		
-		double r_norm = 0;
-		for (int i = 0; i < n + 1; i++) {
-			for (int j = 0; j < m + 1; j++) {
-				if (abs(r[i][j]) > r_norm)
-					r_norm = abs(r[i][j]);
-			}
-		}
+	
 
 
 		std::ofstream outfile("test.dat");
@@ -488,12 +481,13 @@ namespace DirikhleGUI {
 				outfile << p << "\t" << e << "\t" << v_new << "\n";
 			}
 		//writeTable(n, m, vec_u, a, b, c, d, 8);
-		std::string results = writeFinalTable(n, m, v, a, b, c, d, S, S_2, eps, eps_max, eps_max_2, error_max, r_norm, w, accuracy);
+		std::string results = writeFinalTable(n, m, v, a, b, c, d, S, S_2, eps, eps_max, eps_max_2, error_max, 0, w, accuracy,r);
 
 		String^ text = gcnew String(results.c_str());
 
 		label7->Text = text;
 
+		
 		Process^ myProcess = gcnew Process();
 		myProcess->StartInfo->FileName = "python";
 		myProcess->StartInfo->Arguments = "show_plot.py";
@@ -554,6 +548,8 @@ namespace DirikhleGUI {
 		else {
 			dataGridView2->ColumnCount = 2*n + 1;
 			for (int r = m; r >= 0; r--) {
+				tabControl1->TabPages[1]->Text = "V2(x,y)";
+				tabControl1->TabPages[2]->Text = "V2(x,y) - V(x,y)";
 				DataGridViewRow^ row1 = gcnew DataGridViewRow();
 				row1->HeaderCell->Value = gcnew String(std::to_string(c + r * (d - c) / m).c_str());
 
